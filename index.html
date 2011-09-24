@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<title>WebBill</title>
+<style>
+	body {
+		font-family: sans-serif;
+		text-align: center;
+	}
+	div#preload {
+	}
+</style>
+<script type="text/javascript" src="jquery-1.5.min.js"></script>
+<script>
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
+
+preload([
+    'images/billA_0.png',
+	'images/billA_1.png',
+	'images/billA_2.png',
+	'images/billA_3.png',
+	'images/billA_4.png',
+	'images/billA_5.png',
+	'images/billA_6.png',
+	'images/billA_7.png',
+	'images/billA_8.png',
+	'images/billA_9.png',
+	'images/billA_10.png',
+	'images/billA_11.png',
+	'images/billA_12.png',
+	'images/billD_0.png',
+	'images/billD_1.png',
+	'images/billD_2.png',
+	'images/billD_3.png',
+	'images/billD_4.png',
+	'images/billL_0.png',
+	'images/billL_1.png',
+	'images/billL_2.png',
+	'images/billR_0.png',
+	'images/billR_1.png',
+	'images/billR_2.png',
+	'images/bsdcpu.png',
+	'images/maccpu.png',
+	'images/nextcpu.png',
+	'images/os2cpu.png',
+	'images/palmcpu.png',
+	'images/sgicpu.png',
+	'images/suncpu.png',
+	'images/toaster.png',
+	'images/apple.png',
+	'images/beos.png',
+	'images/bsd.png',
+	'images/hurd.png',
+	'images/linux.png',
+	'images/next.png',
+	'images/os2.png',
+	'images/palm.png',
+	'images/redhat.png',
+	'images/sgi.png',
+	'images/sun.png',
+	'images/wingdows.png',
+//	'images/operatingsystems.png',
+	'images/bucket.png',
+	'images/hand_down.png',
+	'images/hand_up.png',
+	'images/spark_0.png',
+	'images/spark_1.png'
+]);
+
+</script>
+</head>
+<body style="background-color: lightgrey;">
+<h1>WebBill</h1>
+<canvas id="canvas" style="margin-top:20px;background-color: white;" width="400" height="400">
+It appears that your browser doesn't support the canvas element.
+</canvas>
+
+<p id="scoreboard" style="background-color:white;color:black;">&nbsp;</p>
+
+<p id="errors" style="background-color:white;color:black;font-size:10px;">&nbsp;</p> 
+
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="ui.js"></script>
+<script type="text/javascript" src="scorelist.js"></script>
+<script type="text/javascript" src="bill.js"></script>
+<script type="text/javascript" src="computer.js"></script>
+<script type="text/javascript" src="spark.js"></script>
+<script type="text/javascript" src="cable.js"></script>
+<script type="text/javascript" src="bucket.js"></script>
+<script type="text/javascript" src="os.js"></script>
+<script type="text/javascript" src="network.js"></script>
+<script type="text/javascript" src="horde.js"></script>
+<script type="text/javascript" src="game.js"></script>
+
+<script>
+	
+	window.onload = function () {
+		main();
+	}
+
+</script>
+
+<button onclick="JavaScript:Game_start(1)">Start</button>
+<button onclick="JavaScript:Game_stop()">Stop</button>
+
+<script type="text/javascript"> 
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script> 
+<script type="text/javascript"> 
+var pageTracker = _gat._getTracker("UA-1895914-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

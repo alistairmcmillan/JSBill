@@ -1,55 +1,43 @@
-#include "types.h"
-#include "util.h"
+var OS_WINGDOWS = 0;
+var OS_OFF = -1;
 
-#include "OS.h"
-#include "UI.h"
+var MIN_PC = 6;		/* OS >= MIN_PC means the OS is a PC OS */
 
-#define MIN_PC 6		/* OS >= MIN_PC means the OS is a PC OS */
+var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd"];
+var NUM_OS = osname.length;
 
-static const char *osname[] = {"wingdows", "apple", "next", "sgi", "sun",
-			       "palm", "os2", "bsd", "linux", "redhat", "hurd"};
-#define NUM_OS (sizeof(osname) / sizeof(osname[0]))
+var os_pictures = [];		/* array of OS pictures*/
+var cursor = [];		/* array of OS cursors (drag/drop) */
 
-static Picture *os[NUM_OS];		/* array of OS pictures*/
-static MCursor *cursor[NUM_OS];		/* array of OS cursors (drag/drop) */
-
-
-void
-OS_load_pix() {
-	unsigned int i;
+function OS_load_pix() {
+	var i;
 	for (i = 0; i < NUM_OS; i++) {
-		UI_load_picture(osname[i], 1, &os[i]);
+		os_pictures[i] = UI_load_picture(osname[i], 1);
 		if (i != 0)
-			UI_load_cursor(osname[i], CURSOR_OWN_MASK, &cursor[i]);
+			cursor[i] = UI_load_cursor(osname[i]);
 	}
 }
 
-void
-OS_draw(int index, int x, int y) {
-	UI_draw(os[index], x, y);
+function OS_draw(index, x, y) {
+	UI_draw(os_pictures[index], x, y);
 }
 
-int
-OS_width() {
-	return UI_picture_width(os[0]);
+function OS_width() {
+	return UI_picture_width(os_pictures[0]);
 }
 
-int
-OS_height() {
-	return UI_picture_height(os[0]);
+function OS_height() {
+	return UI_picture_height(os_pictures[0]);
 }
 
-void
-OS_set_cursor(int index) {
+function OS_set_cursor(index) {
 	UI_set_cursor(cursor[index]);
 }
 
-int
-OS_randpc() {
+function OS_randpc() {
 	return (RAND(MIN_PC, NUM_OS - 1));
 }
 
-int
-OS_ispc(int index) {
+function OS_ispc(index) {
 	return (index >= MIN_PC);
 }

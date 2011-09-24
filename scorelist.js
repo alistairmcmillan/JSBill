@@ -1,59 +1,55 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+var NAMELEN = 20;
+var SCORES = 10;
+var scores = [];
+var score_str;
 
-#include "Scorelist.h"
-#include "UI.h"
+function Score() {
+	var name;
+	var level;
+	var score;
+};
 
-#define NAMELEN 20
-#define SCORES 10
+var scores;
 
-typedef struct Score {
-	char name[NAMELEN + 1];
-	int level;
-	int score;
-} Score;
-
-static Score scores[SCORES];
-
-void
-Scorelist_read() {
-	FILE *scorefile = fopen(SCOREFILE, "r");
-	int i;
-
-	if (scorefile != NULL) {
+// TODO
+function Scorelist_read() {
+	var scorefile = null; // TODO = fopen(SCOREFILE, "r");
+	var i;
+	
+	if (scorefile != null) {
 		for (i = 0; i < SCORES; i++)
-			fscanf(scorefile, "%20s%d%d\n", scores[i].name,
-			       &scores[i].level, &scores[i].score);
+			fscanf(scorefile, "%20s%d%d\n", scores[i].name, scores[i].level, scores[i].score);
 		fclose(scorefile);
-	}
-	else {
+	} else {
 		for (i = 0; i < SCORES; i++) {
-			strcpy(scores[i].name, "Anonymous");
+			scores[i] = new Score(); // TODO
+			scores[i].name = "Anonymous";
 			scores[i].level = 0;
 			scores[i].score = 0;
 		}
 	}
 }
 
-void
-Scorelist_write() {
-	FILE *scorefile = fopen(SCOREFILE, "w");
-	int i;
-	if (scorefile == NULL)
+// TODO
+function Scorelist_write() {
+/*
+	var scorefile = fopen(SCOREFILE, "w");
+	var i;
+	if (scorefile == null)
 		return;
 	for (i = 0; i < SCORES; i++)
 		fprintf(scorefile, "%-*s %d %d\n", NAMELEN,
 			scores[i].name, scores[i].level, scores[i].score);
 	fclose(scorefile);
+*/
 }
 
 /*  Add new high score to list   */
-void
-Scorelist_recalc(const char *str, int level, int score) {
-	int i;
-	char tname[NAMELEN + 1];
-	char *nl;
+// TODO
+function Scorelist_recalc(str, level, score) {
+	var i;
+	var tname;
+	var nl;
 
 	if (scores[SCORES - 1].score >= score)
 		return;
@@ -68,33 +64,31 @@ Scorelist_recalc(const char *str, int level, int score) {
 	}
 
 	memset(tname, 0, sizeof(tname));
-	if (str == NULL || str[0] == 0)
+	if (str == null || str[0] == 0)
 		strcpy(tname, "Anonymous");
 	strncpy(tname, str, sizeof(tname) - 1);
 	nl = strchr(tname,'\n');
-	if (nl != NULL)
-		*nl = 0;
+	if (nl != null)
+		nl = 0;
 	
 	strcpy(scores[i].name, tname);
 	scores[i].level = level;
 	scores[i].score = score;
 }
 
-void
-Scorelist_update() {
-	char str[500];
-	int i;
-	sprintf(str, "%s\n\n", "High Scores:");
-	sprintf(str, "%s%-*s %6s %7s\n", str, NAMELEN,
-		"Name", "Level", "Score");
+// TODO
+function Scorelist_update() {
+	var i;
+	score_str = "High Score:\n\n";
+//	sprintf(str, "%s%-*s %6s %7s\n", str, NAMELEN, "Name", "Level", "Score");
+	score_str = score_str + "Name Level Score\n";
 	for (i = 0; i < SCORES; i++) {
-		sprintf(str, "%s%-*s %6d %7d\n", str, NAMELEN,
-			scores[i].name, scores[i].level, scores[i].score);
+//		sprintf(str, "%s%s %6d %7d\n", str, scores[i].name, scores[i].level, scores[i].score);
+		score_str = score_str + scores[i].name + " " + scores[i].level + " " + scores[i].score + "\n";
 	}
-	UI_update_dialog(DIALOG_HIGHSCORE, str);
+//	UI_update_dialog(DIALOG_HIGHSCORE, str);
 }
 
-int
-Scorelist_ishighscore(int val) {
+function Scorelist_ishighscore(val) {
 	return (val > scores[SCORES - 1].score);
 }

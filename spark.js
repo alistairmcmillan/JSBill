@@ -1,29 +1,25 @@
-#include "types.h"
-#include "util.h"
+var spark_pictures = [];
 
-#include "Spark.h"
-#include "UI.h"
+var SPARK_SPEED = 4;
 
-static Picture *pictures[2];
+function SPARK_DELAY(level) {
+	return (MAX(20 - (level), 0));
+}
 
-void
-Spark_load_pix() {
-	int i;
+function Spark_load_pix() {
+	var i;
 	for (i = 0; i < 2; i++)
-		UI_load_picture_indexed("spark", i, 1, &pictures[i]);
+		spark_pictures[i] = UI_load_picture_indexed("spark", i);
 }
 
-int
-Spark_width() {
-	return UI_picture_width(pictures[0]);
+function Spark_width() {
+	return UI_picture_width(spark_pictures[0]);
 }
 
-int
-Spark_height() {
-	return UI_picture_height(pictures[0]);
+function Spark_height() {
+	return UI_picture_height(spark_pictures[0]);
 }
 
-void
-Spark_draw(int x, int y, int index) {
-	UI_draw(pictures[index], x, y);
+function Spark_draw(x, y, index) {
+	UI_draw(spark_pictures[index], x, y);
 }

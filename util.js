@@ -1,22 +1,13 @@
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-fatal(const char *format, ...) {
-	va_list args;
-
-	va_start(args, format);
-	vfprintf(stderr, format, args);
-	va_end(args);
-	fprintf(stderr, "\n");
-	exit(1);
+function RAND(lb, ub) {
+//	(rand() % ((ub) - (lb) + 1) + (lb));
+//		y = Math.floor(Math.random()*(screensize-border-45))+border;
+	return Math.floor(Math.random()*((ub) - (lb) + 1) + (lb));
 }
 
-void *
-xalloc(int size) {
-	void *p = malloc(size);
-	if (p == NULL)
-		fatal("out of memory");
-	return p;
+function MAX(x, y) {
+	return ((x) > (y) ? (x) : (y));
+}
+
+function MIN(x, y) {
+	return ((x) < (y) ? (x) : (y));
 }

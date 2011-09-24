@@ -1,162 +1,149 @@
-#include <stdlib.h>
+var alive = null;
+var strays = null;
+// var counters = [];
 
-#include "types.h"
-#include "util.h"
+var MAX_BILLS = 100;		/* max Bills per level */
+var HORDE_COUNTER_OFF = 0;
+var HORDE_COUNTER_ON = 0;
+// var HORDE_COUNTER_MAX = 1;
 
-#include "Bill.h"
-#include "Computer.h"
-#include "Game.h"
-#include "Horde.h"
-#include "Network.h"
-#include "UI.h"
+function UNLINK(bill, list) {
+	if (bill.next != null) {
+		bill.next.prev = bill.prev;
+	}
+	if (bill.prev != null) {
+		bill.prev.next = bill.next;
+	} else if (bill == list) {
+		list = bill.next;
+	}
+	bill.prev = null;
+	bill.next = null;
+	return list;
+}
 
-static Bill *alive, *strays;
-static int counters[HORDE_COUNTER_MAX + 1];
+function PREPEND(bill, list) {
+	bill.next = list;
+	if (list != null) {
+		list.prev = bill;
+	} else {
+	}
+	list = bill;
+	return list;
+}
 
-#define MAX_BILLS 100		/* max Bills per level */
-
-#define UNLINK(bill, list)						\
-	do {							\
-		if ((bill)->next != NULL)			\
-			(bill)->next->prev = (bill)->prev;	\
-		if ((bill)->prev != NULL)			\
-			(bill)->prev->next = (bill)->next;	\
-		else if ((bill) == list)			\
-			(list) = (bill)->next;			\
-		(bill)->prev = NULL;				\
-		(bill)->next = NULL;				\
-	} while (0)
-
-#define PREPEND(bill, list)					\
-	do {							\
-		(bill)->next = (list);				\
-		if ((list) != NULL)				\
-			(list)->prev = (bill);			\
-		(list) = (bill);				\
-	} while (0)
-
-static int
-on(unsigned int lev) {
-	int perlevel = (int)((8 + 3 * lev) * Game_scale(2));
+function on(lev) {
+	var perlevel = ((8 + 3 * lev) * Game_scale(2));
 	return MIN(perlevel, MAX_BILLS);
 }
 
-static int
-max_at_once(unsigned int lev) {
-	return MIN(2 + lev / 4, 12);
+function max_at_once(lev) {
+	return Math.round(MIN(2 + lev / 4, 12));
 }
 
-static int
-between(unsigned int lev) {
-	return MAX(14 - lev / 3, 10);
+function between(lev) {
+	return Math.round(MAX(14 - lev / 3, 10));
 }
 
 /*  Launches Bills whenever called  */
-static void
-launch(int max) {
-	Bill *bill;
-	int n;
-	int off_screen = counters[HORDE_COUNTER_OFF];
+function launch(max) {
+	var bill = new Bill();
+	var n;
+	var off_screen = HORDE_COUNTER_OFF;
 
 	if (max == 0 || off_screen == 0)
 		return;
 	n = RAND(1, MIN(max, off_screen));
 	for (; n > 0; n--) {
-		Bill_enter(&bill);
-		PREPEND(bill, alive);
+		Bill_enter(bill);
+		alive = PREPEND(bill, alive);
 	}
 }
 
-void
-Horde_setup() {
-	Bill *bill;
-	while (alive != NULL) {
+function Horde_setup() {
+	var bill;
+	while (alive != null) {
 		bill = alive;
-		UNLINK(bill, alive);
-		free(bill);
+		alive = UNLINK(bill, alive);
+		bill = null;
 	}
-	while (strays != NULL) {
+	while (strays != null) {
 		bill = strays;
-		UNLINK(bill, strays);
-		free(bill);
+		strays = UNLINK(bill, strays);
+		bill = null;
 	}
-	counters[HORDE_COUNTER_OFF] = on(Game_level());
-	counters[HORDE_COUNTER_ON] = 0;
+	HORDE_COUNTER_OFF = on(Game_level());
+	HORDE_COUNTER_ON = 0;
 }
 
-void
-Horde_update(int iteration) {
-	Bill *bill, *next;
-	int level = Game_level();
-	if (iteration % between(level) == 0)
+function Horde_update(iteration) {
+	var bill, next;
+	var level = Game_level();
+	if (iteration % between(level) === 0) {
 		launch(max_at_once(level));
-	for (bill = alive; bill != NULL; bill = next) {
-		next = bill->next;
+	}
+	for (bill = alive; bill != null; bill = next) {
+		next = bill.next;
 		Bill_update(bill);
 	}
 }
 
-void
-Horde_draw() {
-	Bill *bill;
+function Horde_draw() {
+	var bill;
 
-	for (bill = strays; bill != NULL; bill = bill->next)
+	for (bill = strays; bill != null; bill = bill.next) {
 		Bill_draw(bill);
-	for (bill = alive; bill != NULL; bill = bill->next)
+	}
+	for (bill = alive; bill != null; bill = bill.next) {
 		Bill_draw(bill);
+	}
 }
 
-void
-Horde_move_bill(Bill *bill) {
-	UNLINK(bill, alive);
-	PREPEND(bill, strays);
+function Horde_move_bill(bill) {
+	alive = UNLINK(bill, alive);
+	strays = PREPEND(bill, strays);
 }
 
-void
-Horde_remove_bill(Bill *bill) {
-	if (bill->state == BILL_STATE_STRAY)
-		UNLINK(bill, strays);
+function Horde_remove_bill(bill) {
+	if (bill.state == BILL_STATE_STRAY)
+		strays = UNLINK(bill, strays);
 	else
-		UNLINK(bill, alive);
+		alive = UNLINK(bill, alive);
 	Network_clear_stray(bill);
-	free(bill);
+//	free(bill);
 }
 
-void
-Horde_add_bill(Bill *bill) {
-	if (bill->state == BILL_STATE_STRAY)
-		PREPEND(bill, strays);
+function Horde_add_bill(bill) {
+	if (bill.state == BILL_STATE_STRAY)
+		strays = PREPEND(bill, strays);
 	else
-		PREPEND(bill, alive);
+		alive = PREPEND(bill, alive);
 }
 
-Bill *
-Horde_clicked_stray(int x, int y) {
-	Bill *bill;
+function Horde_clicked_stray(x, y) {
+	var bill;
 
-	for (bill = strays; bill != NULL; bill = bill->next) {
+	for (bill = strays; bill != null; bill = bill.next) {
 		if (!Bill_clickedstray(bill, x, y))
 			continue;
-		UNLINK(bill, strays);
+		strays = UNLINK(bill, strays);
 		return bill;
 	}
-	return NULL;
+	return null;
 }
 
-int
-Horde_process_click(int x, int y) {
-	Bill *bill;
-	int counter = 0;
+function Horde_process_click(x, y) {
+	var bill;
+	var counter = 0;
 
-	for (bill = alive; bill != NULL; bill = bill->next) {
-		if (bill->state == BILL_STATE_DYING ||
+	for (bill = alive; bill != null; bill = bill.next) {
+		if (bill.state == BILL_STATE_DYING ||
 		    !Bill_clicked(bill, x, y))
 			continue;
-		if (bill->state == BILL_STATE_AT) {
+		if (bill.state == BILL_STATE_AT) {
 			Computer *comp;
-			comp = Network_get_computer(bill->target_c);
-			comp->busy = 0;
-			comp->stray = bill;
+			comp = Network_get_computer(bill.target_c);
+			comp.busy = 0;
+			comp.stray = bill;
 		}
 		Bill_set_dying(bill);
        		counter++;
@@ -164,12 +151,11 @@ Horde_process_click(int x, int y) {
 	return counter;
 }
 
-void
-Horde_inc_counter(int counter, int val) {
-	counters[counter] += val;
+function Horde_inc_counter(counter, val) {
+	counter += val;
+	return counter;
 }
 
-int
-Horde_get_counter(int counter) {
-	return counters[counter];
+function Horde_get_counter(counter) {
+	return counter;
 }

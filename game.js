@@ -1,58 +1,38 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <time.h>
+var ctx;
 
-#include "types.h"
-#include "util.h"
-
-#include "Bill.h"
-#include "Bucket.h"
-#include "Computer.h"
-#include "Cable.h"
-#include "Game.h"
-#include "Horde.h"
-#include "Network.h"
-#include "OS.h"
-#include "Scorelist.h"
-#include "Spark.h"
-#include "UI.h"
-
-#define SCREENSIZE 400
+var SCREENSIZE = 400;
 
 /* Game states */
-#define STATE_PLAYING 1
-#define STATE_BETWEEN 2
-#define STATE_END 3
-#define STATE_WAITING 4
+var STATE_PLAYING = 1;
+var STATE_BETWEEN = 2;
+var STATE_END = 3;
+var STATE_WAITING = 4;
 
 /* Score related constants */
-#define SCORE_ENDLEVEL -1
-#define SCORE_BILLPOINTS 5
+var SCORE_ENDLEVEL = -1;
+var SCORE_BILLPOINTS = 5;
 
-static unsigned int state;
-static int efficiency;
-static int score, level, iteration;
-static Picture *logo, *icon, *about;
-static MCursor *defaultcursor, *downcursor;
-static Bill *grabbed;
-static const char *gui;
-static int screensize = SCREENSIZE;
+var state;
+var efficiency;
+var score, level, iteration;
+var logo, icon, about;
+var defaultcursor;
+var downcursor;
+var grabbed;
+var gui;
+var screensize = SCREENSIZE;
 
-static void
-setup_level(int newlevel) {
+function setup_level(newlevel) {
 	level = newlevel;
 	Horde_setup();
-	grabbed = NULL;
+	grabbed = null;
 	UI_set_cursor(defaultcursor);
 	Network_setup();
 	iteration = 0;
 	efficiency = 0;
 }
 
-void
-Game_start(int newlevel) {
+function Game_start(newlevel) {
 	state = STATE_PLAYING;
 	score = 0;
 	UI_restart_timer();
@@ -60,29 +40,32 @@ Game_start(int newlevel) {
 	setup_level(newlevel);
 }
 
-void
-Game_quit() {
+function Game_stop() {
+	UI_kill_timer();
+	UI_set_pausebutton(0);
+}
+
+function Game_quit() {
 	Scorelist_write();
 	exit(0);
 }
 
-static void
-update_info(void) {
-	char str[80];
-	int on_screen = Horde_get_counter(HORDE_COUNTER_ON);
-	int off_screen = Horde_get_counter(HORDE_COUNTER_OFF);
-	int base = Network_get_counter(NETWORK_COUNTER_BASE);
-	int off = Network_get_counter(NETWORK_COUNTER_OFF);
-	int win = Network_get_counter(NETWORK_COUNTER_WIN);
-	int units = Network_num_computers();
-	sprintf(str, "Bill:%d/%d  System:%d/%d/%d  Level:%d  Score:%d",
-		on_screen, off_screen, base, off, win, level, score);
-	UI_draw_str(str, 5, screensize - 5);
+function update_info() {
+	var str;
+	var on_screen = Horde_get_counter(HORDE_COUNTER_ON);
+	var off_screen = Horde_get_counter(HORDE_COUNTER_OFF);
+	var base = Network_get_counter(NETWORK_COUNTER_BASE);
+	var off = Network_get_counter(NETWORK_COUNTER_OFF);
+	var win = Network_get_counter(NETWORK_COUNTER_WIN);
+	var units = Network_num_computers();
+	$('p#scoreboard').empty();
+	$('p#scoreboard').append("Bill:"+on_screen+"/"+off_screen+"  System:"+base+"/"+off+"/"+win+"  Level:"+level+"  Score:"+score);
+//	sprintf(str, "Bill:%d/%d  System:%d/%d/%d  Level:%d  Score:%d", on_screen, off_screen, base, off, win, level, score);
+//	UI_draw_str(str, 5, screensize - 5);
 	efficiency += ((100 * base - 10 * win) / units);
 }
 
-void
-Game_warp_to_level(int lev) {
+function Game_warp_to_level(lev) {
 	if (state == STATE_PLAYING) {
 		if (lev <= level)
 			return;
@@ -95,15 +78,15 @@ Game_warp_to_level(int lev) {
 	}
 }
 
-void
-Game_add_high_score(const char *str) {
+function Game_add_high_score(str) {
 	Scorelist_recalc(str, level, score);
 }
 
-void
-Game_button_press(int x, int y) {
-	int counter;
-
+function Game_button_press(event) { //x, y) {
+	var counter;
+	var x = event.pageX;
+	var y = event.pageY;
+	
 	if (state != STATE_PLAYING)
 		return;
 	UI_set_cursor(downcursor);
@@ -114,8 +97,8 @@ Game_button_press(int x, int y) {
 	}
 
 	grabbed = Horde_clicked_stray(x, y);
-	if (grabbed != NULL) {
-		OS_set_cursor(grabbed->cargo);
+	if (grabbed != null) {
+		OS_set_cursor(grabbed.cargo);
 		return;
 	}
 
@@ -123,54 +106,52 @@ Game_button_press(int x, int y) {
 	score += (counter * counter * SCORE_BILLPOINTS);
 }
 
-void
-Game_button_release(int x, int y) {
-	int i;
+function Game_button_release(event) {
+	var i;
+	var x = event.pageX;
+	var y = event.pageY;
+	
 	UI_set_cursor(defaultcursor);
 
 	if (state != STATE_PLAYING)
 		return;
 
-	if (grabbed == NULL) {
+	if (grabbed == null) {
 		Bucket_release(x, y);
 		return;
 	}
 
 	for (i = 0; i < Network_num_computers(); i++) {
-		Computer *computer = Network_get_computer(i);
+		var computer = Network_get_computer(i);
 
 		if (Computer_on(computer, x, y) &&
-		    Computer_compatible(computer, grabbed->cargo) &&
-		    (computer->os == OS_WINGDOWS || computer->os == OS_OFF)) {
-			int counter;
+		    Computer_compatible(computer, grabbed.cargo) &&
+		    (computer.os == OS_WINGDOWS || computer.os == OS_OFF)) {
+			var counter;
 
 			Network_inc_counter(NETWORK_COUNTER_BASE, 1);
-			if (computer->os == OS_WINGDOWS)
+			if (computer.os == OS_WINGDOWS)
 				counter = NETWORK_COUNTER_WIN;
 			else
 				counter = NETWORK_COUNTER_OFF;
 			Network_inc_counter(counter, -1);
-			computer->os = grabbed->cargo;
+			computer.os = grabbed.cargo;
 			Horde_remove_bill(grabbed);
-			grabbed = NULL;
+			grabbed = null;
 			return;
 		}
 	}
 	Horde_add_bill(grabbed);
-	grabbed = NULL;
+	grabbed = null;
 }
 
-static void
-draw_logo(void) {
+function draw_logo() {
 	UI_clear();
-	UI_draw(logo,
-		(screensize - UI_picture_width(logo)) / 2,
-		(screensize - UI_picture_height(logo)) / 2);
+	UI_draw(logo, (screensize - UI_picture_width(logo)) / 2, (screensize - UI_picture_height(logo)) / 2);
 }
 
-void
-Game_update() {
-	char str[40];
+function Game_update() {
+	var str;
 
 	switch (state) {
 	case STATE_PLAYING:
@@ -181,14 +162,13 @@ Game_update() {
 		Horde_update(iteration);
 		Horde_draw();
 		update_info();
-		if (Horde_get_counter(HORDE_COUNTER_ON) +
-		    Horde_get_counter(HORDE_COUNTER_OFF) == 0) {
+		if (Horde_get_counter(HORDE_COUNTER_ON) + Horde_get_counter(HORDE_COUNTER_OFF) == 0) {
 			score += (level * efficiency / iteration);
 			state = STATE_BETWEEN;
 		}
-		if ((Network_get_counter(NETWORK_COUNTER_BASE) +
-		     Network_get_counter(NETWORK_COUNTER_OFF)) <= 1)
+		if ((Network_get_counter(NETWORK_COUNTER_BASE) + Network_get_counter(NETWORK_COUNTER_OFF)) <= 1) {
 			state = STATE_END;
+		}
 		break;
 	case STATE_END:
 		UI_set_cursor(defaultcursor);
@@ -196,12 +176,14 @@ Game_update() {
 		Network_toasters();
 		Network_draw();
 		UI_refresh();
-		UI_popup_dialog(DIALOG_ENDGAME);
+//		UI_popup_dialog(DIALOG_ENDGAME);
+		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
 		if (Scorelist_ishighscore(score)) {
-			UI_popup_dialog(DIALOG_ENTERNAME);
+//			UI_popup_dialog(DIALOG_ENTERNAME); TODO
 			Scorelist_update();
 		}
-		UI_popup_dialog(DIALOG_HIGHSCORE);
+//		UI_popup_dialog(DIALOG_HIGHSCORE);
+		alert(score_str);
 		draw_logo();
 		UI_kill_timer();
 		UI_set_pausebutton(0);
@@ -209,9 +191,12 @@ Game_update() {
 		break;
 	case STATE_BETWEEN:
 		UI_set_cursor(defaultcursor);
-		sprintf(str, "After Level %d:\nScore: %d", level, score);
-		UI_update_dialog(DIALOG_SCORE, str);
-		UI_popup_dialog(DIALOG_SCORE);
+//		$('p#errors').empty();
+//		$('p#errors').append("After Level  "+level+"\nScore: "+score);
+//		sprintf(str, "After Level %d:\nScore: %d", level, score);
+//		UI_update_dialog(DIALOG_SCORE, str);
+//		UI_popup_dialog(DIALOG_SCORE);
+//		alert("After Level  "+level+"\nScore: "+score);
 		state = STATE_PLAYING;
 		setup_level(++level);
 		break;
@@ -220,108 +205,62 @@ Game_update() {
 	iteration++;
 }
 
-int
-Game_score() {
+function Game_score() {
 	return score;
 }
 
-int
-Game_level() {
+function Game_level() {
 	return level;
 }
 
-int
-Game_screensize() {
+function Game_screensize() {
 	return screensize;
 }
 
-double
-Game_scale(int dimensions) {
-	double scale = (double)screensize / SCREENSIZE;
-	double d = 1;
+function Game_scale(dimensions) {
+	var scale = screensize / SCREENSIZE;
+	var d = 1;
 	for ( ; dimensions > 0; dimensions--)
 		d *= scale;
 	return (d);
 }
 
-/*
- * Note - don't use getopt, since it might reorder the args or do something
- * that the UI-specific argument parser doesn't like.
- */
-static void
-parse_args(int argc, char **argv) {
-	char *s;
-	char *endp;
-	int i;
-
-	for (i = 1; i < argc; i++) {
-		if (strncasecmp(argv[i], "-l", 2) == 0) {
-			if (strlen(argv[i]) == 2 && i == argc - 1)
-				fatal("-l takes an argument");
-			if (strlen(argv[i]) > 2)
-				s = argv[i] + 2;
-			else
-				s = argv[++i];
-			level = strtol(s, &endp, 10);
-			if (*endp != '\0' || level <= 0)
-				fatal("invalid level '%s'", s);
-		} else if (strcmp(argv[i], "--gui") == 0) {
-			if (i == argc - 1)
-				fatal("--gui takes an argument");
-			gui = argv[++i];
-		} else if (strcmp(argv[i], "--size") == 0) {
-			if (i == argc - 1)
-				fatal("--size takes an argument");
-			s = argv[++i];
-			screensize = strtol(s, &endp, 10);
-			if (*endp != '\0' || screensize <= 0)
-				fatal("invalid screensize '%s'", s);
-			if (screensize < SCREENSIZE)
-				fatal("screensize must be larger than '%d'",
-				       SCREENSIZE);
-		} else if (strcmp(argv[1], "-v") == 0 ||
-			   strcmp(argv[1], "--version") == 0)
-		{
-			printf ("XBill version 2.1\n\n");
-			exit(0);
-		} else if (strcmp(argv[1], "-h") == 0 ||
-			   strcmp(argv[1], "--help") == 0)
-		{
-			printf("XBill version 2.1\n");
-			printf("Options:\n");
-			printf("-l <n>\tStart at level n.\n");
-			printf("--gui <gui> \tUse a specific gui "
-			       "(athena, motif, gtk)\n");
-			printf("--size <size>\t\tUse a larger playing area.\n");
-			printf("-v\t\tPrint version number and exit.\n");
-			printf("-h\t\tPrint help and exit.\n");
-			printf("All standard toolkit options are also ");
-			printf("supported.\n\n");
-			exit(0);
-		}
-	}
-}
-
-int
-main(int argc, char **argv) {
-	srand(time(NULL));
-	parse_args(argc, argv);
-	UI_initialize(gui, &argc, argv);
-	UI_make_main_window(screensize);
-	UI_graphics_init();
-	UI_load_picture("logo", 0, &logo);
-	UI_load_picture("icon", 0, &icon);
-	UI_load_picture("about", 0, &about);
+function main() {
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	$("canvas").unbind();
+//	$("canvas").bind('click', function(event) {
+//		handleClick(event);
+//	});
+	
+	$("canvas").bind('mousedown', function(event) {
+		Game_button_press(event);
+	});
+	
+	$("canvas").bind('mouseup', function(event) {
+		Game_button_release(event);
+	});
+	
+//	srand(time(null));
+//	UI_initialize(gui, argc, argv);
+//	UI_make_main_window(screensize);
+//	UI_graphics_init();
+	logo = new Image();
+	UI_load_picture("logo", 0, logo);
+//	UI_load_picture("icon", 0, icon);
+	UI_load_picture("about", 0, about);
 	draw_logo();
 	UI_refresh();
-	UI_make_dialogs(logo, icon, about);
-	UI_set_icon(icon);
+//	UI_make_dialogs(logo, icon, about);
+//	UI_set_icon(icon);
 
 	Scorelist_read();
 	Scorelist_update();
 
-	UI_load_cursor("hand_up", CURSOR_SEP_MASK, &defaultcursor);
-	UI_load_cursor("hand_down", CURSOR_SEP_MASK, &downcursor);
+	defaultcursor = new Image();
+	defaultcursor = UI_load_cursor("hand_up");
+//	downcursor = UI_load_cursor("hand_down");
+//	UI_load_cursor("hand_down", downcursor);
 	UI_set_cursor(defaultcursor);
 
 	Bill_load_pix();
@@ -336,5 +275,8 @@ main(int argc, char **argv) {
 	else
 		UI_set_pausebutton(0);
 	UI_main_loop();
-	exit(0);
+	
+//	ctx.font = "bold 12px sans-serif";
+//	ctx.textAlign = "center";
+//	ctx.fillText("Click to start", 200, 200);
 }

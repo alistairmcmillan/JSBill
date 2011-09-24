@@ -1,44 +1,40 @@
-#include <stdlib.h>
+var OS_OFFSET = 4;			/* offset of screen from 0,0 */
+var COMPUTER_TOASTER = 0	/* computer 0 is a toaster */
 
-#include "types.h"
-#include "util.h"
+function BORDER(size) {		/* at least this far from a side */
+	return size/10;
+}
 
-#include "Bill.h"
-#include "Computer.h"
-#include "Horde.h"
-#include "Network.h"
-#include "Game.h"
-#include "OS.h"
-#include "UI.h"
+var MIN_PC = 6;		/* type >= MIN_PC means the computer is a PC */
 
-#define OS_OFFSET 4			/* offset of screen from 0,0 */
-#define BORDER(size) (size / 10)	/* at least this far from a side */
+var cpuname = ["toaster", "maccpu", "nextcpu", "sgicpu", "suncpu", "palmcpu", "os2cpu", "bsdcpu"];
 
-#define MIN_PC 6		/* type >= MIN_PC means the computer is a PC */
+var NUM_SYS = cpuname.length;
 
-static const char *cpuname[] = {"toaster", "maccpu", "nextcpu", "sgicpu",
-				"suncpu", "palmcpu", "os2cpu", "bsdcpu"};
+var cpu_pictures = [];		/* array of cpu pictures */
+var width, height;
 
-#define NUM_SYS (sizeof(cpuname) / sizeof(cpuname[0]))
+function computer() {
+	this.type = 0;		/* CPU type */
+	this.os = 0;	/* current OS */  // 0 is wingdows, -1 means off, anything else means other OS
+	this.x = 0;
+	this.y = 0;		/* location */
+	this.busy = 0;	/* is the computer being used? */  // 1 is computer already targeted by a Bill, 0 is free to be targeted
+	this.stray = 0;
+};
 
-static Picture *pictures[NUM_SYS];		/* array of cpu pictures */
-static int width, height;
-
-
-static int
-determineOS(Computer *computer) {
-	if (computer->type < MIN_PC)
-		return computer->type;
+function determineOS(computer) {
+	if (computer.type < MIN_PC)
+		return computer.type;
 	else
 		return OS_randpc();
 }
 
-int
-Computer_setup(Computer *computer, int index) {
-	int j, counter = 0, flag;
-	int x, y;
-	int screensize = Game_screensize();
-	int border = BORDER(screensize);
+function Computer_setup(computer, index) {
+	var j, counter = 0, flag;
+	var x, y;
+	var screensize = Game_screensize();
+	var border = BORDER(screensize);
 	do {
 		if (++counter > 4000)
 			return 0;
@@ -47,57 +43,54 @@ Computer_setup(Computer *computer, int index) {
 		flag = 1;
 		/* check for conflicting computer placement */
 		for (j = 0; j < index && flag; j++) {
-			Computer *c = Network_get_computer(j);
-			int twidth = width - BILL_OFFSET_X + Bill_width();
-			if (UI_intersect(x, y, twidth, height,
-					 c->x, c->y, twidth, height))
+			var c = Network_get_computer(j);
+			var twidth = width - BILL_OFFSET_X + Bill_width();
+			// (Math.abs(computers[j].x - x) < 55) && (Math.abs(computers[j].y - y) < 45)
+			if (UI_intersect(x, y, twidth, height, c.x, c.y, twidth, height)) {
 				flag = 0;
+			}
 		}
 	} while (!flag);
-	computer->x = x;
-	computer->y = y;
-	computer->type = RAND(1, NUM_SYS - 1);
-	computer->os = determineOS(computer);
-	computer->busy = 0;
-	computer->stray = NULL;
+	computer.x = x;
+	computer.y = y;
+	computer.type = RAND(1, NUM_SYS - 1);
+	computer.os = determineOS(computer);
+	computer.busy = 0;
+	computer.stray = null;
 	return 1;
 }
 
-int
-Computer_on(Computer *computer, int locx, int locy) {
-	return (abs(locx - computer->x) < width &&
-		abs(locy - computer->y) < height);
+function Computer_on(computer, locx, locy) {
+	return (abs(locx - computer.x) < width &&
+		abs(locy - computer.y) < height);
 }
 
-int
-Computer_compatible(Computer *computer, int system) {
-	return (computer->type == system ||
-		(computer->type >= MIN_PC && OS_ispc(system)));
+function Computer_compatible(computer, system) {
+	return (computer.type == system ||
+		(computer.type >= MIN_PC && OS_ispc(system)));
 }
 
-void
-Computer_draw(Computer *computer) {
-	UI_draw(pictures[computer->type], computer->x, computer->y);
-	if (computer->os != OS_OFF)
-		OS_draw(computer->os,
-			computer->x + OS_OFFSET, computer->y + OS_OFFSET);
+function Computer_draw(computer) {
+	ctx.drawImage(cpu_pictures[computer.type], computer.x, computer.y);
+//	UI_draw(cpu_pictures[computer.type], computer.x, computer.y);
+	if (computer.os != OS_OFF) {
+		ctx.drawImage(os_pictures[computer.os], computer.x + OS_OFFSET, computer.y + OS_OFFSET);
+//		OS_draw(computer.os, computer.x + OS_OFFSET, computer.y + OS_OFFSET);
+	}
 }
 
-void
-Computer_load_pix() {
-	unsigned int i;
+function Computer_load_pix() {
+	var i;
 	for (i = 0; i < NUM_SYS; i++)
-		UI_load_picture(cpuname[i], 1, &pictures[i]);
-	width = UI_picture_width(pictures[0]);
-	height = UI_picture_height(pictures[0]);
+		cpu_pictures[i] = UI_load_picture(cpuname[i]);
+	width = UI_picture_width(cpu_pictures[0]);
+	height = UI_picture_height(cpu_pictures[0]);
 }
 
-int
-Computer_width() {
+function Computer_width() {
 	return width;
 }
 
-int
-Computer_height() {
+function Computer_height() {
 	return height;
 }

@@ -1,78 +1,71 @@
-#include <stdlib.h>
-#include <stdio.h>
+var NETWORK_COUNTER_OFF = 0;
+var NETWORK_COUNTER_BASE = 1;
+var NETWORK_COUNTER_WIN = 2;
+var NETWORK_COUNTER_MAX = 2;
 
-#include "types.h"
-#include "util.h"
+var STD_MAX_COMPUTERS = 20;
 
-#include "Cable.h"
-#include "Computer.h"
-#include "Game.h"
-#include "Network.h"
-#include "OS.h"
-#include "UI.h"
+var computers = [];
+var ncomputers;
+var cables = [];
+var ncables;
+var counters = []; 	/* number in each state */
 
-#define STD_MAX_COMPUTERS 20
-
-static Computer *computers;
-static int ncomputers;
-static Cable **cables;
-static int ncables;
-static int counters[NETWORK_COUNTER_MAX + 1]; 	/* number in each state */
-
-static int
-on(int level) {
-	int normal = MIN(8 + level, STD_MAX_COMPUTERS);
-	return (int)(normal * Game_scale(2));
+function on(level) {
+	var normal = MIN(8 + level, STD_MAX_COMPUTERS);
+	return (normal * Game_scale(2));
 }
 
 /* sets up network for each level */
-void
-Network_setup() {
-	int i;	
+function Network_setup() {
+	var i;	
 	ncomputers = on(Game_level());
-	if (computers != NULL)
-		free(computers);
-	if (cables != NULL) {
-		for (i = 0; i < ncables; i++)
-			if (cables[i] != NULL)
-				free(cables[i]);
-		free(cables);
+	if (computers != null)
+		computers.length = 0;
+	if (cables != null) {
+//		for (i = 0; i < ncables; i++)
+//			if (cables[i] != null)
+//				free(cables[i]);
+		cables.length = 0;
+	} else {
 	}
-	computers = xalloc(ncomputers * sizeof(Computer));
-	for (i = 0; i < ncomputers; i++)
-		if (!Computer_setup(&computers[i], i)) {
+//	computers = xalloc(ncomputers * sizeof(Computer));
+	for (i = 0; i < ncomputers; i++) {
+		computers[i] = new computer();
+		if (!Computer_setup(computers[i], i)) {
 			ncomputers = i - 1;
 			break;
 		}
+	}
 	counters[NETWORK_COUNTER_OFF] = 0;
 	counters[NETWORK_COUNTER_BASE] = ncomputers;
 	counters[NETWORK_COUNTER_WIN] = 0;
 	ncables = MIN(Game_level(), ncomputers/2);
-	cables = xalloc(ncables * sizeof(Cable *));
-	for (i = 0; i < ncables; i++)
-		Cable_setup(&cables[i]);
+//	cables = xalloc(ncables * sizeof(Cable *));
+	for (i = 0; i < ncables; i++) {
+		cables[i] = new Cable();
+		Cable_setup(cables[i]);
+	}
 }
 
 /* redraws the computers at their location with the proper image */
-void
-Network_draw () {
-	int i;
+function Network_draw () {
+	var i;
 	for (i = 0; i < ncables; i++)
 		Cable_draw(cables[i]);
-	for (i = 0; i < ncomputers; i++)
-		Computer_draw(&computers[i]);
+	for (i = 0; i < ncomputers; i++) {
+		Computer_draw(computers[i]);
+	}
 }
 
-void
-Network_update () {
-	int i;
+function Network_update () {
+	var i;
 	for (i = 0; i < ncables; i++)
 		Cable_update(cables[i]);
 }
 
-void
-Network_toasters () {
-	int i;
+function Network_toasters () {
+	var i;
 	for (i = 0; i < ncomputers; i++) {
 		computers[i].type = COMPUTER_TOASTER;
 		computers[i].os = OS_OFF;
@@ -80,41 +73,34 @@ Network_toasters () {
 	ncables = 0;
 }
 
-Computer *
-Network_get_computer(int index) {
-	return &computers[index];
+function Network_get_computer(index) {
+	return computers[index];
 }
 
-int
-Network_num_computers() {
+function Network_num_computers() {
 	return ncomputers;
 }
 
-Cable *
-Network_get_cable(int index) {
+function Network_get_cable(index) {
 	return cables[index];
 }
 
-int
-Network_num_cables() {
+function Network_num_cables() {
 	return ncables;
 }
 
-void
-Network_clear_stray(Bill *bill) {
-	int i;
+function Network_clear_stray(bill) {
+	var i;
 	for (i = 0; i < ncomputers; i++) {
 		if (computers[i].stray == bill)
-			computers[i].stray = NULL;
+			computers[i].stray = null;
 	}
 }
 
-void
-Network_inc_counter(int counter, int val) {
+function Network_inc_counter(counter, val) {
 	counters[counter] += val;
 }
 
-int
-Network_get_counter(int counter) {
+function Network_get_counter(counter) {
 	return counters[counter];
 }
