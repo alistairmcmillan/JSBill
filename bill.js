@@ -24,7 +24,7 @@ var lcels = [];
 var rcels = [];
 var acels = [];
 var dcels = [];
-var width, height;
+var billwidth, billheight;
 
 function Bill() {
 	this.state;		/* what is it doing? */
@@ -49,14 +49,14 @@ function get_border_bill(bill) {
 	var screensize = Game_screensize();
 
 	if (i % 2 == 0) {
-		bill.x = RAND(0, screensize - width);
+		bill.x = RAND(0, screensize - billwidth);
 	} else {
-		bill.y = RAND(0, screensize - height);
+		bill.y = RAND(0, screensize - billheight);
 	}
 
 	switch (i) {
 		case 0:
-			bill.y = -height - 16;
+			bill.y = -billheight - 16;
 			break;
 		case 1:
 			bill.x = screensize + 1;
@@ -65,7 +65,7 @@ function get_border_bill(bill) {
 			bill.y = screensize + 1;
 			break;
 		case 3:
-			bill.x = - width - 2;
+			bill.x = - billwidth - 2;
 			break;
 	}
 }
@@ -75,14 +75,14 @@ function get_border_target(bill) {
 	var screensize = Game_screensize();
 
 	if (i % 2 == 0) {
-		bill.target_x = RAND(0, screensize - width);
+		bill.target_x = RAND(0, screensize - billwidth);
 	} else {
-		bill.target_y = RAND(0, screensize - height);
+		bill.target_y = RAND(0, screensize - billheight);
 	}
 
 	switch (i) {
 		case 0:
-			bill.target_y = -height - 16;
+			bill.target_y = -billheight - 16;
 			break;
 		case 1:
 			bill.target_x = screensize + 1;
@@ -91,7 +91,7 @@ function get_border_target(bill) {
 			bill.target_y = screensize + 1;
 			break;
 		case 3:
-			bill.target_x = - width - 2;
+			bill.target_x = - billwidth - 2;
 			break;
 	}
 }
@@ -102,14 +102,14 @@ function get_border(x, y) {
 	var screensize = Game_screensize();
 
 	if (i % 2 == 0) {
-		x = RAND(0, screensize - width);
+		x = RAND(0, screensize - billwidth);
 	} else {
-		y = RAND(0, screensize - height);
+		y = RAND(0, screensize - billheight);
 	}
 
 	switch (i) {
 		case 0:
-			y = -height - 16;
+			y = -billheight - 16;
 			break;
 		case 1:
 			x = screensize + 1;
@@ -118,7 +118,7 @@ function get_border(x, y) {
 			y = screensize + 1;
 			break;
 		case 3:
-			x = - width - 2;
+			x = - billwidth - 2;
 			break;
 	}
 }
@@ -276,7 +276,7 @@ function update_at(bill) {
 		computer.busy = 0;
 		return;
 	}
-	bill.y_offset = height - OS_height();
+	bill.y_offset = billheight - OS_height();
 	switch (bill.index) {
 	case 1: 
 	case 2:
@@ -346,7 +346,7 @@ function update_at(bill) {
 /* Updates Bill fleeing with his ill gotten gain */
 function update_out(bill) {
 	var screensize = Game_screensize();
-	if (UI_intersect(bill.x, bill.y, width, height, 0, 0, screensize, screensize)) {
+	if (UI_intersect(bill.x, bill.y, billwidth, billheight, 0, 0, screensize, screensize)) {
 		move(bill, FAST);
 		bill.index++;
 		bill.index %= WCELS;
@@ -405,13 +405,11 @@ function Bill_set_dying(bill) {
 }
 
 function Bill_clicked(bill, locx, locy) {
-	return (locx > bill.x && locx < bill.x + width &&
-		locy > bill.y && locy < bill.y + height);
+	return (locx > bill.x && locx < bill.x + billwidth && locy > bill.y && locy < bill.y + billheight);
 }
 
 function Bill_clickedstray(bill, locx, locy) {
-	return (locx > bill.x && locx < bill.x + OS_width() &&
-		locy > bill.y && locy < bill.y + OS_height());
+	return (locx > bill.x && locx < bill.x + OS_width() && locy > bill.y && locy < bill.y + OS_height());
 }
 
 function Bill_load_pix () {
@@ -431,8 +429,8 @@ function Bill_load_pix () {
 		dcels[i] = new Image();
 		dcels[i] = UI_load_picture_indexed("billD", i);
 	}
-	width = UI_picture_width(dcels[0]);
-	height = UI_picture_height(dcels[0]);
+	billwidth = UI_picture_width(dcels[0]);
+	billheight = UI_picture_height(dcels[0]);
 
 	for (i = 0; i < ACELS; i++) {
 		acels[i] = new Image();
@@ -441,11 +439,11 @@ function Bill_load_pix () {
 }
 
 function Bill_width() {
-	return width;
+	return billwidth;
 }
 
 function Bill_height() {
-	return height;
+	return billheight;
 }
 
 function Bill_get_state(bill) {

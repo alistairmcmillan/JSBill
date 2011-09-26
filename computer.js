@@ -12,7 +12,7 @@ var cpuname = ["toaster", "maccpu", "nextcpu", "sgicpu", "suncpu", "palmcpu", "o
 var NUM_SYS = cpuname.length;
 
 var cpu_pictures = [];		/* array of cpu pictures */
-var width, height;
+var compwidth, compheight;
 
 function computer() {
 	this.type = 0;		/* CPU type */
@@ -38,15 +38,15 @@ function Computer_setup(computer, index) {
 	do {
 		if (++counter > 4000)
 			return 0;
-		x = RAND(border, screensize - border - width);
-		y = RAND(border, screensize - border - height);
+		x = RAND(border, screensize - border - compwidth);
+		y = RAND(border, screensize - border - compheight);
 		flag = 1;
 		/* check for conflicting computer placement */
 		for (j = 0; j < index && flag; j++) {
 			var c = Network_get_computer(j);
-			var twidth = width - BILL_OFFSET_X + Bill_width();
+			var twidth = compwidth - BILL_OFFSET_X + Bill_width();
 			// (Math.abs(computers[j].x - x) < 55) && (Math.abs(computers[j].y - y) < 45)
-			if (UI_intersect(x, y, twidth, height, c.x, c.y, twidth, height)) {
+			if (UI_intersect(x, y, twidth, compheight, c.x, c.y, twidth, compheight)) {
 				flag = 0;
 			}
 		}
@@ -61,7 +61,7 @@ function Computer_setup(computer, index) {
 }
 
 function Computer_on(computer, locx, locy) {
-	return (Math.abs(locx - computer.x) < width && Math.abs(locy - computer.y) < height);
+	return (Math.abs(locx - computer.x) < compwidth && Math.abs(locy - computer.y) < compheight);
 }
 
 function Computer_compatible(computer, system) {
@@ -79,14 +79,14 @@ function Computer_load_pix() {
 	var i;
 	for (i = 0; i < NUM_SYS; i++)
 		cpu_pictures[i] = UI_load_picture(cpuname[i]);
-	width = UI_picture_width(cpu_pictures[0]);
-	height = UI_picture_height(cpu_pictures[0]);
+	compwidth = UI_picture_width(cpu_pictures[0]);
+	compheight = UI_picture_height(cpu_pictures[0]);
 }
 
 function Computer_width() {
-	return width;
+	return compwidth;
 }
 
 function Computer_height() {
-	return height;
+	return compheight;
 }
