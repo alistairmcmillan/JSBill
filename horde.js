@@ -137,8 +137,7 @@ function Horde_process_click(x, y) {
 	var counter = 0;
 
 	for (bill = alive; bill != null; bill = bill.next) {
-		if (bill.state == BILL_STATE_DYING ||
-		    !Bill_clicked(bill, x, y))
+		if (bill.state == BILL_STATE_DYING || !Bill_clicked(bill, x, y))
 			continue;
 		if (bill.state == BILL_STATE_AT) {
 			Computer *comp;
@@ -147,7 +146,7 @@ function Horde_process_click(x, y) {
 			comp.stray = bill;
 		}
 		Bill_set_dying(bill);
-       		counter++;
+		counter++;
 	}
 	return counter;
 }

@@ -86,7 +86,9 @@ function Game_button_press(event) { //x, y) {
 	var counter;
 	var x = event.pageX;
 	var y = event.pageY;
-	
+	x -= canvas.offsetLeft;
+	y -= canvas.offsetTop;
+
 	if (state != STATE_PLAYING)
 		return;
 	UI_set_cursor(downcursor);
@@ -110,6 +112,8 @@ function Game_button_release(event) {
 	var i;
 	var x = event.pageX;
 	var y = event.pageY;
+	x -= canvas.offsetLeft;
+	y -= canvas.offsetTop;
 	
 	UI_set_cursor(defaultcursor);
 

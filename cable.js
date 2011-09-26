@@ -135,8 +135,8 @@ function Cable_update(cable) {
 function Cable_onspark(cable, locx, locy) {
 	if (!cable.active)
 		return 0;
-	return (abs(locx - cable.x) < Spark_width() &&
-		abs(locy - cable.y) < Spark_height());
+	return (Math.abs(locx - cable.x) < Spark_width() &&
+		Math.abs(locy - cable.y) < Spark_height());
 }
 
 function Cable_reset(cable) {
