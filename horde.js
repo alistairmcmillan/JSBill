@@ -140,7 +140,7 @@ function Horde_process_click(x, y) {
 		if (bill.state == BILL_STATE_DYING || !Bill_clicked(bill, x, y))
 			continue;
 		if (bill.state == BILL_STATE_AT) {
-			Computer *comp;
+			var comp;
 			comp = Network_get_computer(bill.target_c);
 			comp.busy = 0;
 			comp.stray = bill;

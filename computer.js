@@ -61,21 +61,17 @@ function Computer_setup(computer, index) {
 }
 
 function Computer_on(computer, locx, locy) {
-	return (abs(locx - computer.x) < width &&
-		abs(locy - computer.y) < height);
+	return (Math.abs(locx - computer.x) < width && Math.abs(locy - computer.y) < height);
 }
 
 function Computer_compatible(computer, system) {
-	return (computer.type == system ||
-		(computer.type >= MIN_PC && OS_ispc(system)));
+	return (computer.type == system || (computer.type >= MIN_PC && OS_ispc(system)));
 }
 
 function Computer_draw(computer) {
 	ctx.drawImage(cpu_pictures[computer.type], computer.x, computer.y);
-//	UI_draw(cpu_pictures[computer.type], computer.x, computer.y);
 	if (computer.os != OS_OFF) {
 		ctx.drawImage(os_pictures[computer.os], computer.x + OS_OFFSET, computer.y + OS_OFFSET);
-//		OS_draw(computer.os, computer.x + OS_OFFSET, computer.y + OS_OFFSET);
 	}
 }
 
