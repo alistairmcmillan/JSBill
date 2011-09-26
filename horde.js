@@ -46,7 +46,7 @@ function between(lev) {
 
 /*  Launches Bills whenever called  */
 function launch(max) {
-	var bill = new Bill();
+	var bill;
 	var n;
 	var off_screen = HORDE_COUNTER_OFF;
 
@@ -54,6 +54,7 @@ function launch(max) {
 		return;
 	n = RAND(1, MIN(max, off_screen));
 	for (; n > 0; n--) {
+		bill = new Bill();
 		Bill_enter(bill);
 		alive = PREPEND(bill, alive);
 	}
