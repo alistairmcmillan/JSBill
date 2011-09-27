@@ -59,9 +59,7 @@ function update_info() {
 	var win = Network_get_counter(NETWORK_COUNTER_WIN);
 	var units = Network_num_computers();
 	$('p#scoreboard').empty();
-	$('p#scoreboard').append("Bill:"+on_screen+"/"+off_screen+"  System:"+base+"/"+off+"/"+win+"  Level:"+level+"  Score:"+score);
-//	sprintf(str, "Bill:%d/%d  System:%d/%d/%d  Level:%d  Score:%d", on_screen, off_screen, base, off, win, level, score);
-//	UI_draw_str(str, 5, screensize - 5);
+	$('p#scoreboard').append("Bill:"+on_screen+"/"+off_screen+"  System:"+base+"/"+off+"/"+win+"  Level:"+level+"  Score:"+Math.floor(score));
 	efficiency += ((100 * base - 10 * win) / units);
 }
 
@@ -188,10 +186,7 @@ function Game_update() {
 		break;
 	case STATE_BETWEEN:
 		UI_set_cursor(defaultcursor);
-//		sprintf(str, "After Level %d:\nScore: %d", level, score);
-//		UI_update_dialog(DIALOG_SCORE, str);
-//		UI_popup_dialog(DIALOG_SCORE);
-//		alert("After Level  "+level+"\nScore: "+score);
+		alert("After Level  "+level+"\nScore: "+Math.floor(score));
 		state = STATE_PLAYING;
 		setup_level(++level);
 		break;

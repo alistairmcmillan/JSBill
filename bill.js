@@ -415,12 +415,8 @@ function Bill_clickedstray(bill, locx, locy) {
 function Bill_load_pix () {
 	var i;
 	for (i = 0; i < WCELS - 1; i++) {
-		lcels[i] = new Image();
-		rcels[i] = new Image();
-		lcels[i].src = 'images/billL_'+i+'.png';
-		rcels[i].src = 'images/billR_'+i+'.png';
-//		lcels[i] = UI_load_picture_indexed("billL", i);
-//		rcels[i] = UI_load_picture_indexed("billR", i);
+		lcels[i] = UI_load_picture_indexed("billL", i);
+		rcels[i] = UI_load_picture_indexed("billR", i);
 	}
 	lcels[WCELS - 1] = lcels[1];
 	rcels[WCELS - 1] = rcels[1];
