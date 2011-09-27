@@ -189,8 +189,6 @@ function Game_update() {
 		break;
 	case STATE_BETWEEN:
 		UI_set_cursor(defaultcursor);
-//		$('p#errors').empty();
-//		$('p#errors').append("After Level  "+level+"\nScore: "+score);
 //		sprintf(str, "After Level %d:\nScore: %d", level, score);
 //		UI_update_dialog(DIALOG_SCORE, str);
 //		UI_popup_dialog(DIALOG_SCORE);
