@@ -152,20 +152,6 @@ function UI_set_icon(icon) {
 //	methods.set_icon(icon);
 }
 
-function UI_clear() {
-	ctx.clearRect(0, 0, 400, 400);
-//	methods.clear_window();
-}
-
-function UI_refresh() {
-//	ctx.clearRect(0, 0, 400, 400);
-}
-
-function UI_draw(pict, x, y) {
-	ctx.drawImage(pict, x, y);
-//	methods.draw_image(pict, x, y);
-}
-
 function UI_draw_line(x1, y1, x2, y2) {
 	ctx.beginPath();
 	ctx.moveTo(x1, y1);

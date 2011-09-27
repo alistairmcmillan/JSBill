@@ -21,5 +21,5 @@ function Spark_height() {
 }
 
 function Spark_draw(x, y, index) {
-	UI_draw(spark_pictures[index], x, y);
+	ctx.drawImage(spark_pictures[index], x, y);
 }

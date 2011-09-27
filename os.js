@@ -19,7 +19,7 @@ function OS_load_pix() {
 }
 
 function OS_draw(index, x, y) {
-	UI_draw(os_pictures[index], x, y);
+	ctx.drawImage(os_pictures[index], x, y);
 }
 
 function OS_width() {

@@ -13,7 +13,7 @@ function Bucket_clicked(x, y) {
 
 function Bucket_draw() {
 	if (!grabbed)
-		UI_draw(picture, 0, 0);
+		ctx.drawImage(bucketpicture, 0, 0);
 }
 
 function Bucket_grab(x, y) {

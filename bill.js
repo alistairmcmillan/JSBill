@@ -191,7 +191,7 @@ function draw_std(bill) {
 	if (bill.cargo >= 0)
 		OS_draw(bill.cargo, bill.x + bill.x_offset,
 			bill.y + bill.y_offset);
-	UI_draw(bill.cels[bill.index], bill.x, bill.y);
+	ctx.drawImage(bill.cels[bill.index], bill.x, bill.y);
 }
 
 function draw_at(bill) {
@@ -201,7 +201,7 @@ function draw_at(bill) {
 	if (bill.cargo >= 0)
 		OS_draw(bill.cargo, bill.x + bill.x_offset,
 			bill.y + bill.y_offset);
-	UI_draw(bill.cels[bill.index], computer.x, computer.y);
+	ctx.drawImage(bill.cels[bill.index], computer.x, computer.y);
 }
 
 function draw_stray(bill) {

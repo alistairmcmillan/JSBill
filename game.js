@@ -154,7 +154,7 @@ function Game_update() {
 
 	switch (state) {
 	case STATE_PLAYING:
-		UI_clear(); 
+		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 		Bucket_draw();
 		Network_update();
 		Network_draw();
@@ -171,10 +171,9 @@ function Game_update() {
 		break;
 	case STATE_END:
 		UI_set_cursor(defaultcursor);
-		UI_clear();
 		Network_toasters();
 		Network_draw();
-		UI_refresh();
+//		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 //		UI_popup_dialog(DIALOG_ENDGAME);
 		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
 		if (Scorelist_ishighscore(score)) {
@@ -197,7 +196,7 @@ function Game_update() {
 		setup_level(++level);
 		break;
 	}
-	UI_refresh();
+//	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 	iteration++;
 }
 
@@ -244,8 +243,8 @@ function main() {
 //	UI_load_picture("icon", 0, icon);
 	UI_load_picture("about", 0, about);
 	draw_logo();
-	UI_refresh();
 //	UI_make_dialogs(logo, icon, about);
+	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 //	UI_set_icon(icon);
 
 	Scorelist_read();
