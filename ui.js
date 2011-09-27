@@ -119,23 +119,6 @@ function UI_graphics_init() {
 //	methods.graphics_init();
 }
 
-/*
-function UI_make_dialogs(logo, icon, about) {
-	dialog_strings[DIALOG_NEWGAME] = newgame_dialog_str;
-	dialog_strings[DIALOG_PAUSEGAME] = pause_dialog_str;
-	dialog_strings[DIALOG_WARPLEVEL] = warp_dialog_str;
-	dialog_strings[DIALOG_HIGHSCORE] = null;
-	dialog_strings[DIALOG_QUITGAME] = quit_dialog_str;
-	dialog_strings[DIALOG_STORY] = story_dialog_str;
-	dialog_strings[DIALOG_RULES] = rules_dialog_str;
-	dialog_strings[DIALOG_ABOUT] = null;
-	dialog_strings[DIALOG_SCORE] = null;
-	dialog_strings[DIALOG_ENDGAME] = endgame_dialog_str;
-	dialog_strings[DIALOG_ENTERNAME] = entername_dialog_str;
-//	methods.create_dialogs(logo, icon, about);
-}
-*/
-
 function UI_popup_dialog(dialog) {
 //	methods.popup_dialog(dialog);
 }

@@ -45,7 +45,6 @@ function Computer_setup(computer, index) {
 		for (j = 0; j < index && flag; j++) {
 			var c = Network_get_computer(j);
 			var twidth = compwidth - BILL_OFFSET_X + Bill_width();
-			// (Math.abs(computers[j].x - x) < 55) && (Math.abs(computers[j].y - y) < 45)
 			if (UI_intersect(x, y, twidth, compheight, c.x, c.y, twidth, compheight)) {
 				flag = 0;
 			}

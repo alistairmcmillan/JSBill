@@ -237,8 +237,6 @@ function main() {
 //	UI_graphics_init();
 //	UI_load_picture("icon", 0, icon);
 	UI_load_picture("about", 0, about);
-	draw_logo();
-//	UI_make_dialogs(logo, icon, about);
 	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 //	UI_set_icon(icon);
 

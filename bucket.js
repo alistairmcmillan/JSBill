@@ -17,9 +17,6 @@ function Bucket_draw() {
 }
 
 function Bucket_grab(x, y) {
-	UNUSED(x);
-	UNUSED(y);
-
 	UI_set_cursor(cursor);
 	grabbed = 1;
 }
