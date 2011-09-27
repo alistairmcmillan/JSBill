@@ -15,7 +15,7 @@ var SCORE_BILLPOINTS = 5;
 var state;
 var efficiency;
 var score, level, iteration;
-var logo, icon, about;
+var icon, about;
 var defaultcursor;
 var downcursor;
 var grabbed;
@@ -149,11 +149,6 @@ function Game_button_release(event) {
 	grabbed = null;
 }
 
-function draw_logo() {
-	UI_clear();
-	UI_draw(logo, (screensize - UI_picture_width(logo)) / 2, (screensize - UI_picture_height(logo)) / 2);
-}
-
 function Game_update() {
 	var str;
 
@@ -188,7 +183,6 @@ function Game_update() {
 		}
 //		UI_popup_dialog(DIALOG_HIGHSCORE);
 		alert(score_str);
-		draw_logo();
 		UI_kill_timer();
 		UI_set_pausebutton(0);
 		state = STATE_WAITING;
@@ -249,8 +243,6 @@ function main() {
 //	UI_initialize(gui, argc, argv);
 //	UI_make_main_window(screensize);
 //	UI_graphics_init();
-	logo = new Image();
-	UI_load_picture("logo", 0, logo);
 //	UI_load_picture("icon", 0, icon);
 	UI_load_picture("about", 0, about);
 	draw_logo();
