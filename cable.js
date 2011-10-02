@@ -31,12 +31,8 @@ function reverse(cable) {
 }
 
 function Cable_setup(cable) {
-//	var cable;
 	var comp1, comp2;
 	var cwidth, cheight;
-
-//	cable = xalloc(sizeof *cable);
-//	cable = new Cable();
 
 	cable.c1 = RAND(0, Network_num_computers() - 1);
 	do {
@@ -54,8 +50,6 @@ function Cable_setup(cable) {
 	cable.x2 = Math.round(comp2.x + cwidth/3);
 	cable.y1 = Math.round(comp1.y + cheight/2);
 	cable.y2 = Math.round(comp2.y + cheight/2);
-
-//	cablep = cable;
 }
 
 function Cable_draw(cable) {

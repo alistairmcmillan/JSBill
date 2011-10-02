@@ -81,45 +81,6 @@ function guis() {
 };
 */
 
-function UI_initialize(gui) {
-	var map;
-	if (gui == null) {
-		map = guis;
-	//	if (map.name == null)
-	//		fatal("no configured GUIs");
-		map.setmethods(methods);
-	} else {
-		for (map = guis; map.name != null; map++)
-			if (strcasecmp(gui, map.name) == 0)
-				break;
-	//	if (map.name == null)
-	//		fatal("GUI '%s' not found", gui);
-		map.setmethods(methods);
-	}
-//	methods.initialize(argc, argv);
-}
-
-/*
-function UI_make_main_window(size) {
-	menu_strings[DIALOG_NEWGAME] = newgame_menu_str;
-	menu_strings[DIALOG_PAUSEGAME] = pause_menu_str;
-	menu_strings[DIALOG_WARPLEVEL] = warp_menu_str;
-	menu_strings[DIALOG_HIGHSCORE] = highscore_menu_str;
-	menu_strings[DIALOG_QUITGAME] = quit_menu_str;
-	menu_strings[DIALOG_STORY] = story_menu_str;
-	menu_strings[DIALOG_RULES] = rules_menu_str;
-	menu_strings[DIALOG_ABOUT] = about_menu_str;
-	menu_strings[DIALOG_SCORE] = score_menu_str;
-	menu_strings[DIALOG_ENDGAME] = endgame_menu_str;
-	menu_strings[DIALOG_ENTERNAME] = entername_menu_str;
-//	methods.make_main_window(size);
-}
-*/
-
-function UI_graphics_init() {
-//	methods.graphics_init();
-}
-
 function UI_popup_dialog(dialog) {
 //	methods.popup_dialog(dialog);
 }
@@ -141,7 +102,6 @@ function UI_draw_line(x1, y1, x2, y2) {
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
 	ctx.stroke();
-//	methods.draw_line(x1, y1, x2, y2);
 }
 
 function UI_draw_str(str, x, y) {

@@ -124,11 +124,7 @@ function get_border(x, y) {
 
 /* Adds a bill to the in state */
 function Bill_enter(bill) {
-//	var bill;
 	var computer;
-
-//	bill = xalloc(sizeof bill);
-//	bill = new Bill();
 
 	bill.state = BILL_STATE_IN;
 	get_border_bill(bill);
@@ -144,7 +140,6 @@ function Bill_enter(bill) {
 	HORDE_COUNTER_OFF = Horde_inc_counter(HORDE_COUNTER_OFF, -1);
 	bill.prev = null;
 	bill.next = null;
-//	billp = bill;
 }
 
 function step_size(level) {

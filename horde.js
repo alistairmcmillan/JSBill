@@ -1,11 +1,9 @@
 var alive = null;
 var strays = null;
-// var counters = [];
 
 var MAX_BILLS = 100;		/* max Bills per level */
 var HORDE_COUNTER_OFF = 0;
 var HORDE_COUNTER_ON = 0;
-// var HORDE_COUNTER_MAX = 1;
 
 function UNLINK(bill, list) {
 	if (bill.next != null) {
@@ -110,7 +108,6 @@ function Horde_remove_bill(bill) {
 	else
 		alive = UNLINK(bill, alive);
 	Network_clear_stray(bill);
-//	free(bill);
 }
 
 function Horde_add_bill(bill) {

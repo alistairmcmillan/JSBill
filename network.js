@@ -23,13 +23,8 @@ function Network_setup() {
 	if (computers != null)
 		computers.length = 0;
 	if (cables != null) {
-//		for (i = 0; i < ncables; i++)
-//			if (cables[i] != null)
-//				free(cables[i]);
 		cables.length = 0;
-	} else {
 	}
-//	computers = xalloc(ncomputers * sizeof(Computer));
 	for (i = 0; i < ncomputers; i++) {
 		computers[i] = new computer();
 		if (!Computer_setup(computers[i], i)) {
@@ -41,7 +36,6 @@ function Network_setup() {
 	counters[NETWORK_COUNTER_BASE] = ncomputers;
 	counters[NETWORK_COUNTER_WIN] = 0;
 	ncables = MIN(Game_level(), ncomputers/2);
-//	cables = xalloc(ncables * sizeof(Cable *));
 	for (i = 0; i < ncables; i++) {
 		cables[i] = new Cable();
 		Cable_setup(cables[i]);
