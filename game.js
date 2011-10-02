@@ -45,11 +45,6 @@ function Game_stop() {
 	UI_set_pausebutton(0);
 }
 
-function Game_quit() {
-	Scorelist_write();
-	exit(0);
-}
-
 function update_info() {
 	var str;
 	var on_screen = Horde_get_counter(HORDE_COUNTER_ON);
