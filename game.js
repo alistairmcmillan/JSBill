@@ -63,7 +63,8 @@ function update_info() {
 	efficiency += ((100 * base - 10 * win) / units);
 }
 
-function Game_warp_to_level(lev) {
+function Game_warp_to_level() {
+	var lev = prompt("Warp to level?", "1");
 	if (state == STATE_PLAYING) {
 		if (lev <= level)
 			return;
