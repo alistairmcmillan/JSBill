@@ -1,19 +1,15 @@
-var bucketpicture;
 var cursor;
 var grabbed;
-
-function Bucket_load_pix() {
-	bucketpicture = UI_load_picture("bucket", 1);
-	cursor = UI_load_cursor("bucket");
-}
+var bucketwidth = 24;
+var bucketheight = 24;
 
 function Bucket_clicked(x, y) {
-	return (x > 0 && x < UI_picture_width(bucketpicture) && y > 0 && y < UI_picture_height(bucketpicture));
+	return (x > 0 && x < bucketwidth && y > 0 && y < bucketheight);
 }
 
 function Bucket_draw() {
 	if (!grabbed)
-		ctx.drawImage(bucketpicture, 0, 0);
+		ctx.drawImage(sprites, 336, 124, 24, 24, 0, 0, 24, 24);
 }
 
 function Bucket_grab(x, y) {

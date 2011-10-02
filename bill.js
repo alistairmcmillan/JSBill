@@ -19,22 +19,20 @@ var WCELS = 4;                 /* # of bill walking animation frames */
 var DCELS = 5;                 /* # of bill dying animation frames */
 var ACELS = 13;                /* # of bill switching OS frames */
 
-//var lcels[WCELS], rcels[WCELS], acels[ACELS], dcels[DCELS];
-var lcels = [];
-var rcels = [];
-var acels = [];
-var dcels = [];
 var billwidth, billheight;
 
 function Bill() {
 	this.state;		/* what is it doing? */
 	this.index;		/* index of animation frame */
-	this.cels;		/* array of animation frames */
 	this.x;
 	this.y;		/* location */
+	this.dx;	/* direction */
 	this.target_x;		/* target x position */
 	this.target_y;		/* target y position */
 	this.target_c;		/* target computer */
+	this.dx;	/* direction */
+	this.dx;	/* direction */
+	this.dx;	/* direction */
 	this.cargo;		/* which OS carried */
 	this.x_offset;		/* accounts for width differences */
 	this.y_offset;		/* 'bounce' factor for OS carried */
@@ -135,7 +133,6 @@ function Bill_enter(bill) {
 	bill.state = BILL_STATE_IN;
 	get_border_bill(bill);
 	bill.index = 0;
-	bill.cels = lcels;
 	bill.cargo = OS_WINGDOWS;
 	bill.x_offset = -2;
 	bill.y_offset = -15;
@@ -177,21 +174,26 @@ function move(bill, mode) {
 			dx *= 1.25;
 			dy *= 1.25;
 		}
+		bill.dx = dx;
 		bill.x += dx;
 		bill.y += dy;
-		if (dx < 0)
-			bill.cels = lcels;
-		else if (dx > 0)
-			bill.cels = rcels;
 	}
 	return 1;
 }
 
 function draw_std(bill) {
 	if (bill.cargo >= 0)
-		OS_draw(bill.cargo, bill.x + bill.x_offset,
-			bill.y + bill.y_offset);
-	ctx.drawImage(bill.cels[bill.index], bill.x, bill.y);
+		OS_draw(bill.cargo, bill.x + bill.x_offset, bill.y + bill.y_offset);
+	if (bill.state === BILL_STATE_DYING ) {
+		// dcels
+		ctx.drawImage(sprites, (bill.index*24)+192, 0, 24, 38, bill.x, bill.y, 24, 38);
+	} else if (bill.dx > 0) {
+		// rcels
+		ctx.drawImage(sprites, (bill.index*24)+96, 0, 24, 38, bill.x, bill.y, 24, 38);
+	} else {
+		// lcels
+		ctx.drawImage(sprites, bill.index*24, 0, 24, 38, bill.x, bill.y, 24, 38);
+	}
 }
 
 function draw_at(bill) {
@@ -201,7 +203,8 @@ function draw_at(bill) {
 	if (bill.cargo >= 0)
 		OS_draw(bill.cargo, bill.x + bill.x_offset,
 			bill.y + bill.y_offset);
-	ctx.drawImage(bill.cels[bill.index], computer.x, computer.y);
+	// acels
+	ctx.drawImage(sprites, bill.index*58, 38, 58, 41, computer.x, computer.y, 58, 41);
 }
 
 function draw_stray(bill) {
@@ -232,7 +235,6 @@ function update_in(bill) {
 	var computer = Network_get_computer(bill.target_c);
 	if (!moved && computer.os != OS_WINGDOWS && !computer.busy) {
 		computer.busy = 1;
-		bill.cels = acels;
 		bill.index = 0;
 		bill.state = BILL_STATE_AT;
 		return;
@@ -271,7 +273,6 @@ function update_at(bill) {
 		bill.x_offset = -2;
 		get_border_target(bill);
 		bill.index = 0;
-		bill.cels = lcels;
 		bill.state = BILL_STATE_OUT;
 		computer.busy = 0;
 		return;
@@ -398,7 +399,6 @@ function Bill_update(bill) {
 
 function Bill_set_dying(bill) {
 	bill.index = -1;
-	bill.cels = dcels;
 	bill.x_offset = -2;
 	bill.y_offset = -15;
 	bill.state = BILL_STATE_DYING;
@@ -413,25 +413,8 @@ function Bill_clickedstray(bill, locx, locy) {
 }
 
 function Bill_load_pix () {
-	var i;
-	for (i = 0; i < WCELS - 1; i++) {
-		lcels[i] = UI_load_picture_indexed("billL", i);
-		rcels[i] = UI_load_picture_indexed("billR", i);
-	}
-	lcels[WCELS - 1] = lcels[1];
-	rcels[WCELS - 1] = rcels[1];
-
-	for (i = 0; i < DCELS; i++) {
-		dcels[i] = new Image();
-		dcels[i] = UI_load_picture_indexed("billD", i);
-	}
-	billwidth = UI_picture_width(dcels[0]);
-	billheight = UI_picture_height(dcels[0]);
-
-	for (i = 0; i < ACELS; i++) {
-		acels[i] = new Image();
-		acels[i] = UI_load_picture_indexed("billA", i);
-	}
+	billwidth = 24;
+	billheight = 38;
 }
 
 function Bill_width() {

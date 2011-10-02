@@ -11,8 +11,8 @@ var cpuname = ["toaster", "maccpu", "nextcpu", "sgicpu", "suncpu", "palmcpu", "o
 
 var NUM_SYS = cpuname.length;
 
-var cpu_pictures = [];		/* array of cpu pictures */
-var compwidth, compheight;
+var compwidth = 55;
+var compheight = 45;
 
 function computer() {
 	this.type = 0;		/* CPU type */
@@ -68,18 +68,10 @@ function Computer_compatible(computer, system) {
 }
 
 function Computer_draw(computer) {
-	ctx.drawImage(cpu_pictures[computer.type], computer.x, computer.y);
+	ctx.drawImage(sprites, computer.type*55, 79, 55, 45, computer.x, computer.y, 55, 45);
 	if (computer.os != OS_OFF) {
-		ctx.drawImage(os_pictures[computer.os], computer.x + OS_OFFSET, computer.y + OS_OFFSET);
+		ctx.drawImage(sprites, computer.os*28, 124, 28, 24, computer.x + OS_OFFSET, computer.y + OS_OFFSET, 28, 24);
 	}
-}
-
-function Computer_load_pix() {
-	var i;
-	for (i = 0; i < NUM_SYS; i++)
-		cpu_pictures[i] = UI_load_picture(cpuname[i]);
-	compwidth = UI_picture_width(cpu_pictures[0]);
-	compheight = UI_picture_height(cpu_pictures[0]);
 }
 
 function Computer_width() {

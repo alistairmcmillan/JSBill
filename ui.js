@@ -3,6 +3,7 @@ var methods
 var dialog_strings
 var menu_strings
 var timer = 0;
+var sprites;
 
 /*
  * Timer operations
@@ -200,4 +201,9 @@ function UI_dialog_string(index) {
 
 function UI_menu_string(index) {
 	return menu_strings[index];
+}
+
+function UI_load_pix() {
+	sprites = new Image();
+	sprites.src = 'images/sprites.png';
 }

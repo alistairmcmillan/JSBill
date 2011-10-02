@@ -1,33 +1,25 @@
 var OS_WINGDOWS = 0;
 var OS_OFF = -1;
+var oswidth = 28;
+var osheight = 24;
 
 var MIN_PC = 6;		/* OS >= MIN_PC means the OS is a PC OS */
 
 var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd"];
 var NUM_OS = osname.length;
 
-var os_pictures = [];		/* array of OS pictures*/
 var cursor = [];		/* array of OS cursors (drag/drop) */
 
-function OS_load_pix() {
-	var i;
-	for (i = 0; i < NUM_OS; i++) {
-		os_pictures[i] = UI_load_picture(osname[i], 1);
-		if (i != 0)
-			cursor[i] = UI_load_cursor(osname[i]);
-	}
-}
-
 function OS_draw(index, x, y) {
-	ctx.drawImage(os_pictures[index], x, y);
+	ctx.drawImage(sprites, index*28, 124, 28, 24, x, y, 28, 24);
 }
 
 function OS_width() {
-	return UI_picture_width(os_pictures[0]);
+	return oswidth;
 }
 
 function OS_height() {
-	return UI_picture_height(os_pictures[0]);
+	return osheight;
 }
 
 function OS_set_cursor(index) {

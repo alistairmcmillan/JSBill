@@ -239,17 +239,14 @@ function main() {
 	Scorelist_read();
 	Scorelist_update();
 
-	defaultcursor = new Image();
-	defaultcursor = UI_load_cursor("hand_up");
+//	defaultcursor = new Image();
+//	defaultcursor = UI_load_cursor("hand_up");
 //	downcursor = UI_load_cursor("hand_down");
 //	UI_load_cursor("hand_down", downcursor);
-	UI_set_cursor(defaultcursor);
+//	UI_set_cursor(defaultcursor);
 
+	UI_load_pix();
 	Bill_load_pix();
-	OS_load_pix();
-	Computer_load_pix();
-	Bucket_load_pix();
-	Spark_load_pix();
 
 	state = STATE_WAITING;
 	if (level)
