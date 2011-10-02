@@ -58,8 +58,8 @@ function update_info() {
 	var off = Network_get_counter(NETWORK_COUNTER_OFF);
 	var win = Network_get_counter(NETWORK_COUNTER_WIN);
 	var units = Network_num_computers();
-	$('p#scoreboard').empty();
-	$('p#scoreboard').append("Bill:"+on_screen+"/"+off_screen+"  System:"+base+"/"+off+"/"+win+"  Level:"+level+"  Score:"+Math.floor(score));
+	var str = "Bill:"+on_screen+"/"+off_screen+"  System:"+base+"/"+off+"/"+win+"  Level:"+level+"  Score:"+Math.floor(score);
+	ctx.fillText(str, 0, SCREENSIZE);
 	efficiency += ((100 * base - 10 * win) / units);
 }
 
@@ -172,11 +172,10 @@ function Game_update() {
 		UI_set_cursor(defaultcursor);
 		Network_toasters();
 		Network_draw();
-//		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
-//		UI_popup_dialog(DIALOG_ENDGAME);
-		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
+//		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
 		if (Scorelist_ishighscore(score)) {
-//			UI_popup_dialog(DIALOG_ENTERNAME); TODO
+			var name = prompt("You earned a high score.\nEnter your name:");
+			Game_add_high_score(name);
 			Scorelist_update();
 		}
 //		UI_popup_dialog(DIALOG_HIGHSCORE);
@@ -184,6 +183,7 @@ function Game_update() {
 		UI_kill_timer();
 		UI_set_pausebutton(0);
 		state = STATE_WAITING;
+			Scorelist_write();
 		break;
 	case STATE_BETWEEN:
 		UI_set_cursor(defaultcursor);
