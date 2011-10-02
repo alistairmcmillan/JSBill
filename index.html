@@ -78,11 +78,32 @@ preload([
 <!--<h1>jsBill</h1>-->
 <img src="images/logo.png" width="260" height="65" alt="xBill" /><br />
 A JavaScript port of <a href="http://xbill.org/">Xbill</a><br />
-<canvas id="canvas" style="margin-top:20px;background-color: white;" width="400" height="400">
-It appears that your browser doesn't support the canvas element.
-</canvas>
 
-<p id="scoreboard" style="background-color:white;color:black;">&nbsp;</p>
+<div style="font-size:12px;display:none;">
+The Story:<br /><br />
+Yet again, the fate of the world rests in your hands!  An evil computer hacker,
+known only by his handle 'Bill', has created the ultimate computer virus.  A
+virus so powerful that it has the power to transmute an ordinary computer into
+a toaster oven.  (oooh!) 'Bill' has cloned himself into a billion-jillion
+micro-Bills.  Their sole purpose is to deliver the nefarious virus, which has
+been cleverly diguised as a popular operating system.<br /><br />
+As System Administrator/Exterminator, your job is to keep Bill from succeeding
+at his task.
+</div>
+
+<div style="margin-top:20px;">
+<button id="newbtn" onclick="JavaScript:Game_start(1)">New Game</button>
+<button id="pausebtn" onclick="JavaScript:Game_stop()">Pause</button>
+<button id="warpbtn" onclick="JavaScript:Game_warp_to_level()">Warp to Level...</button>
+</div>
+
+<div style="float:left;width:600px;margin-left:auto;margin-right:auto;">
+<canvas id="canvas" style="margin-top:20px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas>
+</div>
+
+<div style="font-size:12px;float:right;width:200px;margin-left:auto;margin-right:auto;">
+<table id="scoretable"></table>
+</div>
 
 <script type="text/javascript" src="util.js"></script>
 <script type="text/javascript" src="ui.js"></script>
@@ -104,9 +125,6 @@ It appears that your browser doesn't support the canvas element.
 	}
 
 </script>
-
-<button onclick="JavaScript:Game_start(1)">Start</button>
-<button onclick="JavaScript:Game_stop()">Stop</button>
 
 <script type="text/javascript"> 
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
