@@ -229,11 +229,6 @@ function main() {
 	});
 	
 //	srand(time(null));
-//	UI_initialize(gui, argc, argv);
-//	UI_make_main_window(screensize);
-//	UI_graphics_init();
-//	UI_load_picture("icon", 0, icon);
-	UI_load_picture("about", 0, about);
 	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 //	UI_set_icon(icon);
 
