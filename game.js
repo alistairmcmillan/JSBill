@@ -170,15 +170,16 @@ function Game_update() {
 //		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
 		if (Scorelist_ishighscore(score)) {
 			var name = prompt("You earned a high score.\nEnter your name:");
+			if (name == null)
+				name = "Anonymous";
 			Game_add_high_score(name);
 			Scorelist_update();
+			Scorelist_write();
 		}
-//		UI_popup_dialog(DIALOG_HIGHSCORE);
-		alert(score_str);
 		UI_kill_timer();
 		UI_set_pausebutton(0);
 		state = STATE_WAITING;
-			Scorelist_write();
+		Scorelist_write();
 		break;
 	case STATE_BETWEEN:
 		UI_set_cursor(defaultcursor);
