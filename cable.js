@@ -14,20 +14,17 @@ function Cable() {
 	this.index;
 };
 
-//#define SWAP(x, y) do {int _t; _t = x; x = y; y = _t;} while(0)
-function SWAP(x, y) {
-	do {
-		var _t;
-		_t = x;
-		x = y;
-		y = _t;
-	} while(0);
-}
-
 function reverse(cable) {
-	SWAP(cable.c1, cable.c2);
-	SWAP(cable.x1, cable.x2);
-	SWAP(cable.y1, cable.y2);
+	var _t;
+	_t = cable.c1;
+	cable.c1 = cable.c2;
+	cable.c2 = _t;
+	_t = cable.x1;
+	cable.x1 = cable.x2;
+	cable.x2 = _t;
+	_t = cable.y1;
+	cable.y1 = cable.y2;
+	cable.y2 = _t;
 }
 
 function Cable_setup(cable) {
@@ -109,8 +106,7 @@ function Cable_update(cable) {
 			}
 			cable.index = 1 - cable.index;
 		}
-	}
-	else {
+	} else {
 		if ((comp1.os == OS_WINGDOWS) == (comp2.os == OS_WINGDOWS))
 			;
 		else if (comp1.os == OS_WINGDOWS || comp2.os == OS_WINGDOWS) {
