@@ -143,7 +143,7 @@ function Bill_enter(bill) {
 }
 
 function step_size(level) {
-	return MIN(11 + level, 15);
+	return Math.min(11 + level, 15);
 }
 
 /*  Moves bill toward his target - returns whether or not he moved */

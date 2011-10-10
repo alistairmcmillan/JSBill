@@ -31,15 +31,15 @@ function PREPEND(bill, list) {
 
 function on(lev) {
 	var perlevel = ((8 + 3 * lev) * Game_scale(2));
-	return MIN(perlevel, MAX_BILLS);
+	return Math.min(perlevel, MAX_BILLS);
 }
 
 function max_at_once(lev) {
-	return Math.round(MIN(2 + lev / 4, 12));
+	return Math.round(Math.min(2 + lev / 4, 12));
 }
 
 function between(lev) {
-	return Math.round(MAX(14 - lev / 3, 10));
+	return Math.round(Math.max(14 - lev / 3, 10));
 }
 
 /*  Launches Bills whenever called  */
@@ -50,7 +50,7 @@ function launch(max) {
 
 	if (max == 0 || off_screen == 0)
 		return;
-	n = RAND(1, MIN(max, off_screen));
+	n = RAND(1, Math.min(max, off_screen));
 	for (; n > 0; n--) {
 		bill = new Bill();
 		Bill_enter(bill);

@@ -94,7 +94,7 @@ function Cable_update(cable) {
 				}
 				cable.active = 0;
 			}
-			else if (MAX(xdist, ydist) < SPARK_SPEED) {
+			else if (Math.max(xdist, ydist) < SPARK_SPEED) {
 				cable.x = cable.x2;
 				cable.y = cable.y2;
 			}

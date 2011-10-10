@@ -1,7 +1,7 @@
 var SPARK_SPEED = 4;
 
 function SPARK_DELAY(level) {
-	return (MAX(20 - (level), 0));
+	return (Math.max(20 - (level), 0));
 }
 
 function Spark_width() {

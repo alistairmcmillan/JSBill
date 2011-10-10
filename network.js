@@ -12,7 +12,7 @@ var ncables;
 var counters = []; 	/* number in each state */
 
 function on(level) {
-	var normal = MIN(8 + level, STD_MAX_COMPUTERS);
+	var normal = Math.min(8 + level, STD_MAX_COMPUTERS);
 	return (normal * Game_scale(2));
 }
 
@@ -35,7 +35,7 @@ function Network_setup() {
 	counters[NETWORK_COUNTER_OFF] = 0;
 	counters[NETWORK_COUNTER_BASE] = ncomputers;
 	counters[NETWORK_COUNTER_WIN] = 0;
-	ncables = MIN(Game_level(), ncomputers/2);
+	ncables = Math.min(Game_level(), ncomputers/2);
 	for (i = 0; i < ncables; i++) {
 		cables[i] = new Cable();
 		Cable_setup(cables[i]);
