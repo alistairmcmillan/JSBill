@@ -1,5 +1,5 @@
 var cursor;
-var grabbed;
+var bucketgrabbed;
 var bucketwidth = 24;
 var bucketheight = 24;
 
@@ -8,13 +8,13 @@ function Bucket_clicked(x, y) {
 }
 
 function Bucket_draw() {
-	if (!grabbed)
+	if (!bucketgrabbed)
 		ctx.drawImage(sprites, 336, 124, 24, 24, 0, 0, 24, 24);
 }
 
 function Bucket_grab(x, y) {
 	UI_set_cursor(cursor);
-	grabbed = 1;
+	bucketgrabbed = 1;
 }
 
 function Bucket_release(x, y) {
@@ -24,5 +24,5 @@ function Bucket_release(x, y) {
 		if (Cable_onspark(cable, x, y))
 			Cable_reset(cable);
 	}
-	grabbed = 0;
+	bucketgrabbed = 0;
 }

@@ -112,8 +112,19 @@ function UI_draw_str(str, x, y) {
  * Other routines
  */
 
-function UI_set_pausebutton (action) {
-//	methods.set_pausebutton(action);
+function UI_set_pausebutton(action) {
+	if (document.all || document.getElementByid){
+		if (action === 1)
+			document.pausebtn.disabled=false;
+		else
+			document.pausebtn.disabled=true;
+//	} else {
+//		console.log("UI_set_pausebutton - document.all  || document.getElementByid didn't work");
+	}
+
+//	document.pausebtn.disabled=true;
+//	if (pausebutton != NULL)
+//		gtk_widget_set_sensitive(pausebutton, active);
 }
 
 function UI_main_loop() {

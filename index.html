@@ -7,7 +7,8 @@
 		font-family: sans-serif;
 		text-align: center;
 	}
-	div#preload {
+	div#footer {
+		clear: both;
 	}
 </style>
 <script type="text/javascript" src="jquery.js"></script>
@@ -25,10 +26,14 @@ preload([
 	'images/sprites.png'
 ]);
 
+function enableButtons() {
+	console.log("enableButtons()");
+	document.getElementById("newbtn").disabled=false;
+}
+
 </script>
 </head>
-<body style="background-color: lightgrey;">
-<!--<h1>jsBill</h1>-->
+<body style="background-color: lightgrey;" onload="enableButtons();">
 <img src="images/logo.png" width="260" height="65" alt="xBill" /><br />
 A JavaScript port of <a href="http://xbill.org/">Xbill</a><br />
 
@@ -54,8 +59,13 @@ at his task.
 <canvas id="canvas" style="margin-top:20px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas>
 </div>
 
-<div style="font-size:12px;float:right;width:200px;margin-left:auto;margin-right:auto;">
+<div style="font-size:12px;float:right;text-align:left;width:200px;margin-left:auto;margin-right:auto;">
 <table id="scoretable"></table>
+<br />
+<h2 style="color:red;">One known bug still remains.</h2> Let me know if you find any others.
+<ul>
+<li>When dragging operating systems or buckets, you don't see the operating system or buckets.</li>
+</ul>
 </div>
 
 <script type="text/javascript" src="util.js"></script>

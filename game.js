@@ -21,6 +21,7 @@ var downcursor;
 var grabbed;
 var gui;
 var screensize = SCREENSIZE;
+var paused = 0;
 
 function setup_level(newlevel) {
 	level = newlevel;
@@ -41,8 +42,15 @@ function Game_start(newlevel) {
 }
 
 function Game_stop() {
-	UI_kill_timer();
-	UI_set_pausebutton(0);
+	if (paused == 0) {
+		UI_kill_timer();
+		UI_set_pausebutton(0);
+		paused = 1;
+	} else {
+		UI_restart_timer();
+		UI_set_pausebutton(1);
+		paused = 0;
+	}
 }
 
 function update_info() {
@@ -76,14 +84,12 @@ function Game_add_high_score(str) {
 	Scorelist_recalc(str, level, score);
 }
 
-function Game_button_press(event) { //x, y) {
+function Mouse_button_press(event) {
 	var counter;
-	var x = event.pageX;
-	var y = event.pageY;
-	x -= canvas.offsetLeft;
-	y -= canvas.offsetTop;
-
-	if (state != STATE_PLAYING)
+	var x = event.pageX - canvas.offsetLeft;
+	var y = event.pageY - canvas.offsetTop;
+	
+	if (state != STATE_PLAYING || paused == 1)
 		return;
 	UI_set_cursor(downcursor);
 
@@ -102,16 +108,14 @@ function Game_button_press(event) { //x, y) {
 	score += (counter * counter * SCORE_BILLPOINTS);
 }
 
-function Game_button_release(event) {
+function Mouse_button_release(event) {
 	var i;
-	var x = event.pageX;
-	var y = event.pageY;
-	x -= canvas.offsetLeft;
-	y -= canvas.offsetTop;
+	var x = event.pageX - canvas.offsetLeft;
+	var y = event.pageY - canvas.offsetTop;
 	
-	UI_set_cursor(defaultcursor);
+//	UI_set_cursor(defaultcursor);
 
-	if (state != STATE_PLAYING)
+	if (state != STATE_PLAYING || paused == 1)
 		return;
 
 	if (grabbed == null) {
@@ -164,7 +168,8 @@ function Game_update() {
 		}
 		break;
 	case STATE_END:
-		UI_set_cursor(defaultcursor);
+//		UI_set_cursor(defaultcursor);
+		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 		Network_toasters();
 		Network_draw();
 //		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
@@ -215,17 +220,18 @@ function Game_scale(dimensions) {
 function main() {
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
-	$("canvas").unbind();
+	ctx.font = "bold 12px sans-serif";
+//	$("canvas").unbind();
 //	$("canvas").bind('click', function(event) {
 //		handleClick(event);
 //	});
-	
+
 	$("canvas").bind('mousedown', function(event) {
-		Game_button_press(event);
+		Mouse_button_press(event);
 	});
 	
 	$("canvas").bind('mouseup', function(event) {
-		Game_button_release(event);
+		Mouse_button_release(event);
 	});
 	
 //	srand(time(null));
