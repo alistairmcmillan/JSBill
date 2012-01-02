@@ -60,30 +60,8 @@ function UI_resume_game() {
 /*
  * Window routines
  */
-/*
-function guimap() {
-	var name;
-	var methodsp;
-}
-*/
-
-/*
-function guis() {
-#ifdef USE_GTK
-	{"gtk", gtk_ui_setmethods},
-#endif
-#ifdef USE_MOTIF
-	{"motif", x11_motif_setmethods},
-#endif
-#ifdef USE_ATHENA
-	{"athena", x11_athena_setmethods},
-#endif
-	{null, null},
-};
-*/
 
 function UI_popup_dialog(dialog) {
-//	methods.popup_dialog(dialog);
 }
 
 /*
@@ -91,17 +69,12 @@ function UI_popup_dialog(dialog) {
  */
 
 function UI_set_cursor(cursor) {
-	// TODO
 }
 
 function UI_set_icon(icon) {
-//	methods.set_icon(icon);
 }
 
 function UI_draw_cursor() {
-	// TODO
-
-//	ctx.drawImage(sprites, /*index*/0*28, 124, 28, 24, x, y, 28, 24);
 	Bucket_draw();
 }
 
@@ -113,7 +86,6 @@ function UI_draw_line(x1, y1, x2, y2) {
 }
 
 function UI_draw_str(str, x, y) {
-//	methods.draw_string(str, x, y);
 }
 
 /*
@@ -127,14 +99,9 @@ function UI_set_pausebutton(action) {
 		else
 			document.pausebtn.disabled=true;
 	}
-
-//	document.pausebtn.disabled=true;
-//	if (pausebutton != NULL)
-//		gtk_widget_set_sensitive(pausebutton, active);
 }
 
 function UI_main_loop() {
-//	methods.main_loop();
 }
 
 function UI_load_picture_indexed(name, index)
@@ -167,7 +134,6 @@ function UI_intersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 }
 
 function UI_update_dialog(index, str) {
-//	methods.update_dialog(index, str);
 }
 
 function UI_dialog_string(index) {

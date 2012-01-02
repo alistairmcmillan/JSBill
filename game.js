@@ -31,7 +31,6 @@ function setup_level(newlevel) {
 	level = newlevel;
 	Horde_setup();
 	grabbed = null;
-//	UI_set_cursor(defaultcursor);
 	Network_setup();
 	iteration = 0;
 	efficiency = 0;
@@ -91,13 +90,10 @@ function Game_add_high_score(str) {
 function Mouse_moved(event) {
 	mousex = event.pageX - canvas.offsetLeft;
 	mousey = event.pageY - canvas.offsetTop;
-	console.log("Mouse position is " + mousex + " by " + mousey);
 }
 
 function Mouse_button_press(event) {
 	var counter;
-//	var x = event.pageX - canvas.offsetLeft;
-//	var y = event.pageY - canvas.offsetTop;
 	
 	if (state != STATE_PLAYING || paused == 1)
 		return;
@@ -120,10 +116,6 @@ function Mouse_button_press(event) {
 
 function Mouse_button_release(event) {
 	var i;
-//	var x = event.pageX - canvas.offsetLeft;
-//	var y = event.pageY - canvas.offsetTop;
-	
-//	UI_set_cursor(defaultcursor);
 
 	if (state != STATE_PLAYING || paused == 1)
 		return;
@@ -158,7 +150,6 @@ function Mouse_button_release(event) {
 }
 
 function Game_update() {
-//	console.log("Game_update " + turn++)
 	var str;
 
 	switch (state) {
@@ -182,11 +173,9 @@ function Game_update() {
 		}
 		break;
 	case STATE_END:
-//		UI_set_cursor(defaultcursor);
 		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 		Network_toasters();
 		Network_draw();
-//		alert("Module xBill has caused a segmentation fault\nat memory address 097E:F1A0.  Core dumped.\n\nWe apologize for the inconvenience.");
 		if (Scorelist_ishighscore(score)) {
 			var name = prompt("You earned a high score.\nEnter your name:");
 			if (name == null)
@@ -201,13 +190,11 @@ function Game_update() {
 		Scorelist_write();
 		break;
 	case STATE_BETWEEN:
-//		UI_set_cursor(defaultcursor);
 		alert("After Level  "+level+"\nScore: "+Math.floor(score));
 		state = STATE_PLAYING;
 		setup_level(++level);
 		break;
 	}
-//	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
 	iteration++;
 }
 
@@ -236,13 +223,6 @@ function main() {
 	ctx = canvas.getContext('2d');
 	ctx.font = "bold 12px sans-serif";
 	$("canvas").unbind();
-//	$("canvas").bind('click', function(event) {
-//		handleClick(event);
-//	});
-
-//	$("canvas").bind('click', function(event) {
-//		event.preventDefault();
-//	});
 
 	$("canvas").bind('mousemove', function(event) {
 		Mouse_moved(event);
@@ -262,18 +242,10 @@ function main() {
 		Mouse_button_release(event);
 	});
 	
-//	srand(time(null));
 	ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
-//	UI_set_icon(icon);
 
 	Scorelist_read();
 	Scorelist_update();
-
-//	defaultcursor = new Image();
-//	defaultcursor = UI_load_cursor("hand_up");
-//	downcursor = UI_load_cursor("hand_down");
-//	UI_load_cursor("hand_down", downcursor);
-//	UI_set_cursor(defaultcursor);
 
 	UI_load_pix();
 	Bill_load_pix();
@@ -284,7 +256,4 @@ function main() {
 	else
 		UI_set_pausebutton(0);
 	UI_main_loop();
-	
-//	ctx.textAlign = "center";
-//	ctx.fillText("Click to start", 200, 200);
 }
