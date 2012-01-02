@@ -59,7 +59,7 @@ var ACELS = 13;                /* # of bill switching OS frames */
 var billwidth, billheight;
 
 var OS_OFFSET = 4;			/* offset of screen from 0,0 */
-var COMPUTER_TOASTER = 0	/* computer 0 is a toaster */
+var COMPUTER_TOASTER = 0;	/* computer 0 is a toaster */
 
 var MIN_PC = 6;		/* type >= MIN_PC means the computer is a PC */
 
@@ -72,7 +72,7 @@ var compheight = 45;
 
 var SPARK_SPEED = 4;
 
-var cursor;
+//var cursor;
 var bucketgrabbed;
 var bucketwidth = 24;
 var bucketheight = 24;
@@ -81,14 +81,11 @@ var OS_WINGDOWS = 0;
 var OS_OFF = -1;
 var oswidth = 28;
 var osheight = 24;
-var grabbedos = 0;
-
-var MIN_PC = 6;		/* OS >= MIN_PC means the OS is a PC OS */
 
 var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd", "beos"];
 var NUM_OS = osname.length;
 
-var cursor = [];		/* array of OS cursors (drag/drop) */
+//var cursor = [];		/* array of OS cursors (drag/drop) */
 
 var NETWORK_COUNTER_OFF = 0;
 var NETWORK_COUNTER_BASE = 1;
@@ -101,7 +98,7 @@ var computers = [];
 var ncomputers;
 var cables = [];
 var ncables;
-var counters = []; 	/* number in each state */
+var counters = [];	/* number in each state */
 
 var alive = null;
 var strays = null;
@@ -111,11 +108,11 @@ var HORDE_COUNTER_OFF = 0;
 var HORDE_COUNTER_ON = 0;
 
 function RAND(lb, ub) {
-	return Math.floor(Math.random()*((ub) - (lb) + 1) + (lb));
+	return Math.floor(Math.random() * ((ub) - (lb) + 1) + (lb));
 }
 
 function BORDER(size) {		/* at least this far from a side */
-	return size/10;
+	return size / 10;
 }
 
 /*
@@ -129,13 +126,13 @@ function timer_tick() {
 }
 
 function start_timer(ms) {
-	if (timer == 0) {
+	if (timer === 0) {
 		timer = setInterval(timer_tick, ms);
 	}
 }
 
 function stop_timer() {
-	if (timer != 0) {
+	if (timer !== 0) {
 		clearInterval(timer);
 	}
 	timer = 0;
@@ -143,7 +140,7 @@ function stop_timer() {
 
 function timer_active() {
 	return (!!timer);
-} 
+}
 
 /*
  * Timer control routines
@@ -157,15 +154,16 @@ function UI_kill_timer() {
 }
 
 function UI_pause_game() {
-	if (timer_active())	{
+	if (timer_active()) {
 		playing = 1;
 	}
 	UI_kill_timer();
 }
 
 function UI_resume_game() {
-	if (playing && !timer_active())
+	if (playing && !timer_active()) {
 		UI_restart_timer();
+	}
 	playing = 0;
 }
 
@@ -189,22 +187,22 @@ function UI_draw_line(x1, y1, x2, y2) {
  */
 
 function UI_set_pausebutton(action) {
-	if (document.all || document.getElementByid){
-		if (action === 1)
-			document.pausebtn.disabled=false;
-		else
-			document.pausebtn.disabled=true;
+	if (document.all || document.getElementByid) {
+		if (action === 1) {
+			document.pausebtn.disabled = false;
+		} else {
+			document.pausebtn.disabled = true;
+		}
 	}
 }
 
-function UI_load_picture_indexed(name, index)
-{
-	return UI_load_picture(name+'_'+index);
+function UI_load_picture_indexed(name, index) {
+	return UI_load_picture(name + '_' + index);
 }
 
 function UI_load_picture(name) {
 	var image = new Image();
-	image.src = 'images/'+name+'.png';
+	image.src = 'images/' + name + '.png';
 	return image;
 }
 
@@ -218,20 +216,12 @@ function UI_picture_height(pict) {
 
 function UI_load_cursor(name) {
 	var image = new Image();
-	image.src = 'images/'+name+'.png';
+	image.src = 'images/' + name + '.png';
 	return image;
 }
 
 function UI_intersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 	return ((Math.abs(x2 - x1 + (w2 - w1) / 2) < (w1 + w2) / 2) && (Math.abs(y2 - y1 + (h2 - h1) / 2) < (h1 + h2) / 2));
-}
-
-function UI_dialog_string(index) {
-	return dialog_strings[index];
-}
-
-function UI_menu_string(index) {
-	return menu_strings[index];
 }
 
 function UI_load_pix() {
@@ -297,7 +287,7 @@ var scores = [
 ];
 
 function Scorelist_read() {
-	if($.cookie("scores") != null) {
+	if ($.cookie("scores") !== null) {
 		scores = JSON.parse($.cookie("scores"));
 	}
 }
@@ -309,35 +299,36 @@ function Scorelist_write() {
 
 /*  Add new high score to list   */
 function Scorelist_recalc(str, level, score) {
-	var i;
-	var tname;
-	var nl;
+	var i, tname;
 
-	if (scores[NUMSCORES - 1].score >= score)
+	if (scores[NUMSCORES - 1].score >= score) {
 		return;
+	}
 	for (i = NUMSCORES - 1; i > 0; i--) {
 		if (scores[i - 1].score < score) {
 			scores[i].name = scores[i - 1].name;
 			scores[i].level = scores[i - 1].level;
 			scores[i].score = scores[i - 1].score;
-		} else
+		} else {
 			break;
+		}
 	}
 
-	if (str == null || str[0] == 0)
+	if (str === null || str[0] === 0) {
 		tname = "Anonymous";
+	}
 	tname = str;
-	
+
 	scores[i].name = tname;
 	scores[i].level = level;
 	scores[i].score = Math.floor(score);
 }
 
 function Scorelist_update() {
+	var i;
 	var scoreTableId = document.getElementById("scoretable");
-	var score_html = "<tr><th colspan=3>High Scores</th></tr>";
-	score_html = score_html + "<tr><td>Name</td><td>Level</td><td>Score</td></tr>";
-	for (var i = 0; i < scores.length; i++) {
+	var score_html = "<tr><th colspan=3>High Scores</th></tr><tr><td>Name</td><td>Level</td><td>Score</td></tr>";
+	for (i = 0; i < scores.length; i++) {
 		score_html = score_html + "<tr><td>" + scores[i].name + "</td><td>" + scores[i].level + "</td><td>" + scores[i].score + "</td></tr>";
 	}
 	scoreTableId.innerHTML = score_html;
@@ -350,7 +341,7 @@ function Scorelist_ishighscore(val) {
 /*
  * Bill
  */
- 
+
 function Bill() {
 	this.state;		/* what is it doing? */
 	this.index;		/* index of animation frame */
@@ -368,7 +359,7 @@ function Bill() {
 	this.y_offset;		/* 'bounce' factor for OS carried */
 	this.sx;
 	this.sy;		/* used for drawing extra OS during switch */
-	this.prev
+	this.prev;
 	this.next;
 };
 
@@ -376,7 +367,7 @@ function get_border_bill(bill) {
 	var i = RAND(0, 3);
 	var screensize = Game_screensize();
 
-	if (i % 2 == 0) {
+	if (i % 2 === 0) {
 		bill.x = RAND(0, screensize - billwidth);
 	} else {
 		bill.y = RAND(0, screensize - billheight);
@@ -393,7 +384,7 @@ function get_border_bill(bill) {
 			bill.y = screensize + 1;
 			break;
 		case 3:
-			bill.x = - billwidth - 2;
+			bill.x = -billwidth - 2;
 			break;
 	}
 }
@@ -402,7 +393,7 @@ function get_border_target(bill) {
 	var i = RAND(0, 3);
 	var screensize = Game_screensize();
 
-	if (i % 2 == 0) {
+	if (i % 2 === 0) {
 		bill.target_x = RAND(0, screensize - billwidth);
 	} else {
 		bill.target_y = RAND(0, screensize - billheight);
@@ -429,7 +420,7 @@ function get_border(x, y) {
 	var i = RAND(0, 3);
 	var screensize = Game_screensize();
 
-	if (i % 2 == 0) {
+	if (i % 2 === 0) {
 		x = RAND(0, screensize - billwidth);
 	} else {
 		y = RAND(0, screensize - billheight);
@@ -486,16 +477,15 @@ function move(bill, mode) {
 	var signy = ydist >= 0 ? 1 : -1;
 	xdist = Math.abs(xdist);
 	ydist = Math.abs(ydist);
-	if (!xdist && !ydist)
+	if (!xdist && !ydist) {
 		return 0;
-	else if (xdist < step && ydist < step) {
+	} else if (xdist < step && ydist < step) {
 		bill.x = bill.target_x;
 		bill.y = bill.target_y;
-	}
-	else {
+	} else {
 		dx = (xdist*step*signx)/(xdist+ydist);
 		dy = (ydist*step*signy)/(xdist+ydist);
-		if (mode == FAST) {
+		if (mode === FAST) {
 			dx *= 1.25;
 			dy *= 1.25;
 		}
@@ -507,8 +497,9 @@ function move(bill, mode) {
 }
 
 function draw_std(bill) {
-	if (bill.cargo >= 0)
+	if (bill.cargo >= 0) {
 		OS_draw(bill.cargo, bill.x + bill.x_offset, bill.y + bill.y_offset);
+	}
 	if (bill.state === BILL_STATE_DYING ) {
 		// dcels
 		ctx.drawImage(sprites, (bill.index*24)+192, 0, 24, 38, bill.x, bill.y, 24, 38);
@@ -523,11 +514,12 @@ function draw_std(bill) {
 
 function draw_at(bill) {
 	var computer = Network_get_computer(bill.target_c);
-	if (bill.index > 6 && bill.index < 12)
+	if (bill.index > 6 && bill.index < 12) {
 		OS_draw(0, bill.x + bill.sx, bill.y + bill.sy);
-	if (bill.cargo >= 0)
-		OS_draw(bill.cargo, bill.x + bill.x_offset,
-			bill.y + bill.y_offset);
+	}
+	if (bill.cargo >= 0) {
+		OS_draw(bill.cargo, bill.x + bill.x_offset,	bill.y + bill.y_offset);
+	}
 	// acels
 	ctx.drawImage(sprites, bill.index*58, 38, 58, 41, computer.x, computer.y, 58, 41);
 }
@@ -558,7 +550,7 @@ function Bill_draw(bill) {
 function update_in(bill) {
 	var moved = move(bill, SLOW);
 	var computer = Network_get_computer(bill.target_c);
-	if (!moved && computer.os != OS_WINGDOWS && !computer.busy) {
+	if (!moved && computer.os !== OS_WINGDOWS && !computer.busy) {
 		computer.busy = 1;
 		bill.index = 0;
 		bill.state = BILL_STATE_AT;
@@ -568,7 +560,7 @@ function update_in(bill) {
 		var i;
 		do {
 			i = RAND(0, Network_num_computers() - 1);
-		} while (i == bill.target_c);
+		} while (i === bill.target_c);
 		computer = Network_get_computer(i);
 		bill.target_c = i;
 		bill.target_x = computer.x + Computer_width() - BILL_OFFSET_X;
@@ -582,18 +574,19 @@ function update_in(bill) {
 /*  Update Bill standing at a computer */
 function update_at(bill) {
 	var computer = Network_get_computer(bill.target_c);
-	if (bill.index == 0 && computer.os == OS_OFF) {
+	if (bill.index === 0 && computer.os === OS_OFF) {
 		bill.index = 6;
-		if (computer.stray == null)
+		if (computer.stray === null) {
 			bill.cargo = -1;
-		else {
+		} else {
 			bill.cargo = computer.stray.cargo;
 			Horde_remove_bill(computer.stray);
 			computer.stray = null;
 		}
-	} else
+	} else {
 		bill.index++;
-	if (bill.index == 13) {
+	}
+	if (bill.index === 13) {
 		bill.y_offset = -15;
 		bill.x_offset = -2;
 		get_border_target(bill);
@@ -622,7 +615,7 @@ function update_at(bill) {
 		bill.x_offset -=2;
 		break;
 	case 6:
-		if (computer.os != OS_OFF) {
+		if (computer.os !== OS_OFF) {
 			Network_inc_counter(NETWORK_COUNTER_BASE, -1);
 			Network_inc_counter(NETWORK_COUNTER_OFF, 1);
 			bill.cargo = computer.os;
@@ -687,15 +680,14 @@ function update_out(bill) {
 
 /* Updates a Bill who is dying */
 function update_dying(bill) {
-	if (bill.index < DCELS - 1){
+	if (bill.index < DCELS - 1) {
 		bill.y_offset += (bill.index * GRAVITY);
 		bill.index++;	
-	}
-	else {
+	} else {
 		bill.y += bill.y_offset;
-		if (bill.cargo < 0 || bill.cargo == OS_WINGDOWS)
+		if (bill.cargo < 0 || bill.cargo === OS_WINGDOWS) {
 			Horde_remove_bill(bill);
-		else {
+		} else {
 			Horde_move_bill(bill);
 			bill.state = BILL_STATE_STRAY;
 		}
@@ -768,10 +760,11 @@ function computer() {
 };
 
 function determineOS(computer) {
-	if (computer.type < MIN_PC)
+	if (computer.type < MIN_PC) {
 		return computer.type;
-	else
+	} else {
 		return OS_randpc();
+	}
 }
 
 function Computer_setup(computer, index) {
@@ -780,8 +773,9 @@ function Computer_setup(computer, index) {
 	var screensize = Game_screensize();
 	var border = BORDER(screensize);
 	do {
-		if (++counter > 4000)
+		if (++counter > 4000) {
 			return 0;
+		}
 		x = RAND(border, screensize - border - compwidth);
 		y = RAND(border, screensize - border - compheight);
 		flag = 1;
@@ -808,12 +802,12 @@ function Computer_on(computer, locx, locy) {
 }
 
 function Computer_compatible(computer, system) {
-	return (computer.type == system || (computer.type >= MIN_PC && OS_ispc(system)));
+	return (computer.type === system || (computer.type >= MIN_PC && OS_ispc(system)));
 }
 
 function Computer_draw(computer) {
 	ctx.drawImage(sprites, computer.type*55, 79, 55, 45, computer.x, computer.y, 55, 45);
-	if (computer.os != OS_OFF) {
+	if (computer.os !== OS_OFF) {
 		ctx.drawImage(sprites, computer.os*28, 124, 28, 24, computer.x + OS_OFFSET, computer.y + OS_OFFSET, 28, 24);
 	}
 }
@@ -886,7 +880,7 @@ function Cable_setup(cable) {
 	cable.c1 = RAND(0, Network_num_computers() - 1);
 	do {
 		cable.c2 = RAND(0, Network_num_computers() - 1);
-	} while (cable.c2 == cable.c1);
+	} while (cable.c2 === cable.c1);
 	cable.active = 0;
 	cable.index = 0;
 	cable.delay = SPARK_DELAY(Game_level());
@@ -916,14 +910,15 @@ function Cable_update(cable) {
 	comp2 = Network_get_computer(cable.c2);
 
 	if (cable.active) {
-		if ((comp1.os == OS_WINGDOWS) == (comp2.os == OS_WINGDOWS))
+		if ((comp1.os === OS_WINGDOWS) === (comp2.os === OS_WINGDOWS)) {
 			cable.active = 0;
-		else if (comp1.os == OS_WINGDOWS || comp2.os == OS_WINGDOWS) {
+		} else if (comp1.os === OS_WINGDOWS || comp2.os === OS_WINGDOWS) {
 			var xdist, ydist;
 			var sx, sy;
 
-			if (comp2.os == OS_WINGDOWS)
+			if (comp2.os === OS_WINGDOWS) {
 				reverse(cable);
+			}
 
 			xdist = cable.x2 - cable.x;
 			ydist = cable.y2 - cable.y;
@@ -932,25 +927,24 @@ function Cable_update(cable) {
 			sy = ydist >= 0 ? 1.0 : -1.0;
 			xdist = Math.abs(xdist);
 			ydist = Math.abs(ydist);
-			if (xdist == 0 && ydist == 0) {
+			if (xdist === 0 && ydist === 0) {
 				if (!comp2.busy) {
 					var counter;
-					if (comp2.os == OS_OFF)
+					if (comp2.os === OS_OFF) {
 						counter = NETWORK_COUNTER_OFF;
-					else
+					} else {
 						counter = NETWORK_COUNTER_BASE;
+					}
 					Network_inc_counter(counter, -1);
 					Network_inc_counter(NETWORK_COUNTER_WIN,
 							    1);
 					comp2.os = OS_WINGDOWS;
 				}
 				cable.active = 0;
-			}
-			else if (Math.max(xdist, ydist) < SPARK_SPEED) {
+			} else if (Math.max(xdist, ydist) < SPARK_SPEED) {
 				cable.x = cable.x2;
 				cable.y = cable.y2;
-			}
-			else {
+			} else {
 				cable.fx+=(xdist*SPARK_SPEED*sx)/(xdist+ydist);
 				cable.fy+=(ydist*SPARK_SPEED*sy)/(xdist+ydist);
 				cable.x = cable.fx;
@@ -959,13 +953,14 @@ function Cable_update(cable) {
 			cable.index = 1 - cable.index;
 		}
 	} else {
-		if ((comp1.os == OS_WINGDOWS) == (comp2.os == OS_WINGDOWS))
+		if ((comp1.os === OS_WINGDOWS) === (comp2.os === OS_WINGDOWS)) {
 			;
-		else if (comp1.os == OS_WINGDOWS || comp2.os == OS_WINGDOWS) {
+		} else if (comp1.os === OS_WINGDOWS || comp2.os === OS_WINGDOWS) {
 			cable.active = 1;
 			cable.delay = SPARK_DELAY(Game_level());
-			if (comp2.os == OS_WINGDOWS)
+			if (comp2.os === OS_WINGDOWS) {
 				reverse(cable);
+			}
 			cable.x = cable.x1;
 			cable.fx = cable.x1;
 			cable.y = cable.y1;
@@ -975,10 +970,10 @@ function Cable_update(cable) {
 }
 
 function Cable_onspark(cable, locx, locy) {
-	if (!cable.active)
+	if (!cable.active) {
 		return 0;
-	return (Math.abs(locx - cable.x) < Spark_width() &&
-		Math.abs(locy - cable.y) < Spark_height());
+	}
+	return (Math.abs(locx - cable.x) < Spark_width() && Math.abs(locy - cable.y) < Spark_height());
 }
 
 function Cable_reset(cable) {
@@ -995,10 +990,11 @@ function Bucket_clicked(x, y) {
 }
 
 function Bucket_draw() {
-	if (!bucketgrabbed)
+	if (!bucketgrabbed) {
 		ctx.drawImage(sprites, 336, 124, 24, 24, 0, 0, 24, 24);
-	else
+	} else {
 		ctx.drawImage(sprites, 336, 124, 24, 24, mousex-12, mousey-12, 24, 24);
+	}
 }
 
 function Bucket_grab(x, y) {
@@ -1009,8 +1005,9 @@ function Bucket_release(x, y) {
 	var i;
 	for (i = 0; i < Network_num_cables(); i++) {
 		var cable = Network_get_cable(i);
-		if (Cable_onspark(cable, x, y))
+		if (Cable_onspark(cable, x, y)) {
 			Cable_reset(cable);
+		}
 	}
 	bucketgrabbed = 0;
 }
@@ -1032,8 +1029,9 @@ function OS_height() {
 }
 
 function OS_draw_cursor() {
-	if(grabbed)
+	if(grabbed) {
 		ctx.drawImage(sprites, grabbedos*28, 124, 24, 24, mousex-14, mousey-12, 28, 24);
+	}
 }
 
 function OS_set_cursor(index) {
@@ -1052,7 +1050,7 @@ function OS_ispc(index) {
  * Network
  */
 
-function on(level) {
+function Network_on(level) {
 	var normal = Math.min(8 + level, STD_MAX_COMPUTERS);
 	return (normal * Game_scale(2));
 }
@@ -1060,10 +1058,11 @@ function on(level) {
 /* sets up network for each level */
 function Network_setup() {
 	var i;	
-	ncomputers = on(Game_level());
-	if (computers != null)
+	ncomputers = Network_on(Game_level());
+	if (computers !== null) {
 		computers.length = 0;
-	if (cables != null) {
+	}
+	if (cables !== null) {
 		cables.length = 0;
 	}
 	for (i = 0; i < ncomputers; i++) {
@@ -1086,8 +1085,9 @@ function Network_setup() {
 /* redraws the computers at their location with the proper image */
 function Network_draw () {
 	var i;
-	for (i = 0; i < ncables; i++)
+	for (i = 0; i < ncables; i++) {
 		Cable_draw(cables[i]);
+	}
 	for (i = 0; i < ncomputers; i++) {
 		Computer_draw(computers[i]);
 	}
@@ -1095,8 +1095,9 @@ function Network_draw () {
 
 function Network_update () {
 	var i;
-	for (i = 0; i < ncables; i++)
+	for (i = 0; i < ncables; i++) {
 		Cable_update(cables[i]);
+	}
 }
 
 function Network_toasters () {
@@ -1127,8 +1128,9 @@ function Network_num_cables() {
 function Network_clear_stray(bill) {
 	var i;
 	for (i = 0; i < ncomputers; i++) {
-		if (computers[i].stray == bill)
+		if (computers[i].stray === bill) {
 			computers[i].stray = null;
+		}
 	}
 }
 
@@ -1145,12 +1147,12 @@ function Network_get_counter(counter) {
  */
  
 function UNLINK(bill, list) {
-	if (bill.next != null) {
+	if (bill.next !== null) {
 		bill.next.prev = bill.prev;
 	}
-	if (bill.prev != null) {
+	if (bill.prev !== null) {
 		bill.prev.next = bill.next;
-	} else if (bill == list) {
+	} else if (bill === list) {
 		list = bill.next;
 	}
 	bill.prev = null;
@@ -1160,15 +1162,14 @@ function UNLINK(bill, list) {
 
 function PREPEND(bill, list) {
 	bill.next = list;
-	if (list != null) {
+	if (list !== null) {
 		list.prev = bill;
-	} else {
 	}
 	list = bill;
 	return list;
 }
 
-function on(lev) {
+function Horde_on(lev) {
 	var perlevel = ((8 + 3 * lev) * Game_scale(2));
 	return Math.min(perlevel, MAX_BILLS);
 }
@@ -1187,8 +1188,9 @@ function launch(max) {
 	var n;
 	var off_screen = HORDE_COUNTER_OFF;
 
-	if (max == 0 || off_screen == 0)
+	if (max === 0 || off_screen === 0) {
 		return;
+	}
 	n = RAND(1, Math.min(max, off_screen));
 	for (; n > 0; n--) {
 		bill = new Bill();
@@ -1199,17 +1201,17 @@ function launch(max) {
 
 function Horde_setup() {
 	var bill;
-	while (alive != null) {
+	while (alive !== null) {
 		bill = alive;
 		alive = UNLINK(bill, alive);
 		bill = null;
 	}
-	while (strays != null) {
+	while (strays !== null) {
 		bill = strays;
 		strays = UNLINK(bill, strays);
 		bill = null;
 	}
-	HORDE_COUNTER_OFF = on(Game_level());
+	HORDE_COUNTER_OFF = Horde_on(Game_level());
 	HORDE_COUNTER_ON = 0;
 }
 
@@ -1219,7 +1221,7 @@ function Horde_update(iteration) {
 	if (iteration % between(level) === 0) {
 		launch(max_at_once(level));
 	}
-	for (bill = alive; bill != null; bill = next) {
+	for (bill = alive; bill !== null; bill = next) {
 		next = bill.next;
 		Bill_update(bill);
 	}
@@ -1228,10 +1230,10 @@ function Horde_update(iteration) {
 function Horde_draw() {
 	var bill;
 
-	for (bill = strays; bill != null; bill = bill.next) {
+	for (bill = strays; bill !== null; bill = bill.next) {
 		Bill_draw(bill);
 	}
-	for (bill = alive; bill != null; bill = bill.next) {
+	for (bill = alive; bill !== null; bill = bill.next) {
 		Bill_draw(bill);
 	}
 }
@@ -1242,26 +1244,29 @@ function Horde_move_bill(bill) {
 }
 
 function Horde_remove_bill(bill) {
-	if (bill.state == BILL_STATE_STRAY)
+	if (bill.state === BILL_STATE_STRAY) {
 		strays = UNLINK(bill, strays);
-	else
+	} else {
 		alive = UNLINK(bill, alive);
+	}
 	Network_clear_stray(bill);
 }
 
 function Horde_add_bill(bill) {
-	if (bill.state == BILL_STATE_STRAY)
+	if (bill.state === BILL_STATE_STRAY) {
 		strays = PREPEND(bill, strays);
-	else
+	} else {
 		alive = PREPEND(bill, alive);
+	}
 }
 
 function Horde_clicked_stray(x, y) {
 	var bill;
 
-	for (bill = strays; bill != null; bill = bill.next) {
-		if (!Bill_clickedstray(bill, x, y))
+	for (bill = strays; bill !== null; bill = bill.next) {
+		if (!Bill_clickedstray(bill, x, y)) {
 			continue;
+		}	
 		strays = UNLINK(bill, strays);
 		return bill;
 	}
@@ -1272,10 +1277,11 @@ function Horde_process_click(x, y) {
 	var bill;
 	var counter = 0;
 
-	for (bill = alive; bill != null; bill = bill.next) {
-		if (bill.state == BILL_STATE_DYING || !Bill_clicked(bill, x, y))
+	for (bill = alive; bill !== null; bill = bill.next) {
+		if (bill.state === BILL_STATE_DYING || !Bill_clicked(bill, x, y)) {
 			continue;
-		if (bill.state == BILL_STATE_AT) {
+		}
+		if (bill.state === BILL_STATE_AT) {
 			var comp;
 			comp = Network_get_computer(bill.target_c);
 			comp.busy = 0;
@@ -1319,7 +1325,7 @@ function Game_start(newlevel) {
 }
 
 function Game_stop() {
-	if (paused == 0) {
+	if (paused === 0) {
 		UI_kill_timer();
 		UI_set_pausebutton(0);
 		paused = 1;
@@ -1331,7 +1337,6 @@ function Game_stop() {
 }
 
 function update_info() {
-	var str;
 	var on_screen = Horde_get_counter(HORDE_COUNTER_ON);
 	var off_screen = Horde_get_counter(HORDE_COUNTER_OFF);
 	var base = Network_get_counter(NETWORK_COUNTER_BASE);
@@ -1345,14 +1350,16 @@ function update_info() {
 
 function Game_warp_to_level() {
 	var lev = prompt("Warp to level?", "1");
-	if (state == STATE_PLAYING) {
-		if (lev <= level)
+	if (state === STATE_PLAYING) {
+		if (lev <= level) {
 			return;
+		}
 		setup_level(lev);
 	}
 	else {
-		if (lev <= 0)
+		if (lev <= 0) {
 			return;
+		}
 		Game_start(lev);
 	}
 }
@@ -1369,7 +1376,7 @@ function Mouse_moved(event) {
 function Mouse_button_press(event) {
 	var counter;
 	
-	if (state != STATE_PLAYING || paused == 1)
+	if (state !== STATE_PLAYING || paused === 1)
 		return;
 
 	if (Bucket_clicked(mousex, mousey)) {
@@ -1378,7 +1385,7 @@ function Mouse_button_press(event) {
 	}
 
 	grabbed = Horde_clicked_stray(mousex, mousey);
-	if (grabbed != null) {
+	if (grabbed !== null) {
 		OS_set_cursor(grabbed.cargo);
 		return;
 	}
@@ -1390,10 +1397,11 @@ function Mouse_button_press(event) {
 function Mouse_button_release(event) {
 	var i;
 
-	if (state != STATE_PLAYING || paused == 1)
+	if (state !== STATE_PLAYING || paused === 1) {
 		return;
+	}
 
-	if (grabbed == null) {
+	if (grabbed === null) {
 		Bucket_release(mousex, mousey);
 		return;
 	}
@@ -1403,14 +1411,15 @@ function Mouse_button_release(event) {
 
 		if (Computer_on(computer, mousex, mousey) &&
 		    Computer_compatible(computer, grabbed.cargo) &&
-		    (computer.os == OS_WINGDOWS || computer.os == OS_OFF)) {
+		    (computer.os === OS_WINGDOWS || computer.os === OS_OFF)) {
 			var counter;
 
 			Network_inc_counter(NETWORK_COUNTER_BASE, 1);
-			if (computer.os == OS_WINGDOWS)
+			if (computer.os === OS_WINGDOWS) {
 				counter = NETWORK_COUNTER_WIN;
-			else
+			} else {
 				counter = NETWORK_COUNTER_OFF;
+			}
 			Network_inc_counter(counter, -1);
 			computer.os = grabbed.cargo;
 			Horde_remove_bill(grabbed);
@@ -1436,7 +1445,7 @@ function Game_update() {
 		UI_draw_cursor();
 		OS_draw_cursor();
 		update_info();
-		if (Horde_get_counter(HORDE_COUNTER_ON) + Horde_get_counter(HORDE_COUNTER_OFF) == 0) {
+		if (Horde_get_counter(HORDE_COUNTER_ON) + Horde_get_counter(HORDE_COUNTER_OFF) === 0) {
 			score += (level * efficiency / iteration);
 			state = STATE_BETWEEN;
 		}
@@ -1450,8 +1459,9 @@ function Game_update() {
 		Network_draw();
 		if (Scorelist_ishighscore(score)) {
 			var name = prompt("You earned a high score.\nEnter your name:");
-			if (name == null)
+			if (name === null) {
 				name = "Anonymous";
+			}
 			Game_add_high_score(name);
 			Scorelist_update();
 			Scorelist_write();
@@ -1485,8 +1495,9 @@ function Game_screensize() {
 function Game_scale(dimensions) {
 	var scale = screensize / SCREENSIZE;
 	var d = 1;
-	for ( ; dimensions > 0; dimensions--)
+	for ( ; dimensions > 0; dimensions--) {
 		d *= scale;
+	}
 	return (d);
 }
 
@@ -1523,8 +1534,9 @@ function main() {
 	Bill_load_pix();
 
 	state = STATE_WAITING;
-	if (level)
+	if (level) {
 		Game_start(level);
-	else
+	} else {
 		UI_set_pausebutton(0);
+	}
 }
