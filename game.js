@@ -1,3 +1,8 @@
+//var turn = 0;
+
+var mousex = 0;
+var mousey = 0;
+
 var ctx;
 
 var SCREENSIZE = 400;
@@ -15,8 +20,7 @@ var SCORE_BILLPOINTS = 5;
 var state;
 var efficiency;
 var score, level, iteration;
-var icon, about;
-var defaultcursor;
+//var defaultcursor;
 var downcursor;
 var grabbed;
 var gui;
@@ -27,7 +31,7 @@ function setup_level(newlevel) {
 	level = newlevel;
 	Horde_setup();
 	grabbed = null;
-	UI_set_cursor(defaultcursor);
+//	UI_set_cursor(defaultcursor);
 	Network_setup();
 	iteration = 0;
 	efficiency = 0;
@@ -84,34 +88,40 @@ function Game_add_high_score(str) {
 	Scorelist_recalc(str, level, score);
 }
 
+function Mouse_moved(event) {
+	mousex = event.pageX - canvas.offsetLeft;
+	mousey = event.pageY - canvas.offsetTop;
+	console.log("Mouse position is " + mousex + " by " + mousey);
+}
+
 function Mouse_button_press(event) {
 	var counter;
-	var x = event.pageX - canvas.offsetLeft;
-	var y = event.pageY - canvas.offsetTop;
+//	var x = event.pageX - canvas.offsetLeft;
+//	var y = event.pageY - canvas.offsetTop;
 	
 	if (state != STATE_PLAYING || paused == 1)
 		return;
 	UI_set_cursor(downcursor);
 
-	if (Bucket_clicked(x, y)) {
-		Bucket_grab(x, y);
+	if (Bucket_clicked(mousex, mousey)) {
+		Bucket_grab(mousex, mousey);
 		return;
 	}
 
-	grabbed = Horde_clicked_stray(x, y);
+	grabbed = Horde_clicked_stray(mousex, mousey);
 	if (grabbed != null) {
 		OS_set_cursor(grabbed.cargo);
 		return;
 	}
 
-	counter = Horde_process_click(x, y);
+	counter = Horde_process_click(mousex, mousey);
 	score += (counter * counter * SCORE_BILLPOINTS);
 }
 
 function Mouse_button_release(event) {
 	var i;
-	var x = event.pageX - canvas.offsetLeft;
-	var y = event.pageY - canvas.offsetTop;
+//	var x = event.pageX - canvas.offsetLeft;
+//	var y = event.pageY - canvas.offsetTop;
 	
 //	UI_set_cursor(defaultcursor);
 
@@ -119,14 +129,14 @@ function Mouse_button_release(event) {
 		return;
 
 	if (grabbed == null) {
-		Bucket_release(x, y);
+		Bucket_release(mousex, mousey);
 		return;
 	}
 
 	for (i = 0; i < Network_num_computers(); i++) {
 		var computer = Network_get_computer(i);
 
-		if (Computer_on(computer, x, y) &&
+		if (Computer_on(computer, mousex, mousey) &&
 		    Computer_compatible(computer, grabbed.cargo) &&
 		    (computer.os == OS_WINGDOWS || computer.os == OS_OFF)) {
 			var counter;
@@ -148,16 +158,19 @@ function Mouse_button_release(event) {
 }
 
 function Game_update() {
+//	console.log("Game_update " + turn++)
 	var str;
 
 	switch (state) {
 	case STATE_PLAYING:
 		ctx.clearRect(0, 0, SCREENSIZE, SCREENSIZE);
+		// TODO
 		Bucket_draw();
 		Network_update();
 		Network_draw();
 		Horde_update(iteration);
 		Horde_draw();
+		UI_draw_cursor();
 		update_info();
 		if (Horde_get_counter(HORDE_COUNTER_ON) + Horde_get_counter(HORDE_COUNTER_OFF) == 0) {
 			score += (level * efficiency / iteration);
@@ -187,7 +200,7 @@ function Game_update() {
 		Scorelist_write();
 		break;
 	case STATE_BETWEEN:
-		UI_set_cursor(defaultcursor);
+//		UI_set_cursor(defaultcursor);
 		alert("After Level  "+level+"\nScore: "+Math.floor(score));
 		state = STATE_PLAYING;
 		setup_level(++level);
@@ -221,16 +234,30 @@ function main() {
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 	ctx.font = "bold 12px sans-serif";
-//	$("canvas").unbind();
+	$("canvas").unbind();
 //	$("canvas").bind('click', function(event) {
 //		handleClick(event);
 //	});
 
-	$("canvas").bind('mousedown', function(event) {
+//	$("canvas").bind('click', function(event) {
+//		event.preventDefault();
+//	});
+
+	$("canvas").bind('mousemove', function(event) {
+		Mouse_moved(event);
+	});
+
+	$("canvas").bind('touchstart', function(event) {
+    	event.preventDefault();
+	});
+
+	$("canvas").bind('mousedown touchstart', function(event) {
+		event.preventDefault();
 		Mouse_button_press(event);
 	});
 	
-	$("canvas").bind('mouseup', function(event) {
+	$("canvas").bind('mouseup touchend', function(event) {
+		event.preventDefault();
 		Mouse_button_release(event);
 	});
 	

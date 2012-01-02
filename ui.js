@@ -90,11 +90,18 @@ function UI_popup_dialog(dialog) {
  */
 
 function UI_set_cursor(cursor) {
-//	methods.set_cursor(cursor);
+	// TODO
 }
 
 function UI_set_icon(icon) {
 //	methods.set_icon(icon);
+}
+
+function UI_draw_cursor() {
+	// TODO
+
+//	ctx.drawImage(sprites, /*index*/0*28, 124, 28, 24, x, y, 28, 24);
+	Bucket_draw();
 }
 
 function UI_draw_line(x1, y1, x2, y2) {

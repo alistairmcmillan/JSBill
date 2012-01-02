@@ -10,6 +10,8 @@ function Bucket_clicked(x, y) {
 function Bucket_draw() {
 	if (!bucketgrabbed)
 		ctx.drawImage(sprites, 336, 124, 24, 24, 0, 0, 24, 24);
+	else
+		ctx.drawImage(sprites, 336, 124, 24, 24, mousex-12, mousey-12, 24, 24);
 }
 
 function Bucket_grab(x, y) {
