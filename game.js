@@ -171,6 +171,7 @@ function Game_update() {
 		Horde_update(iteration);
 		Horde_draw();
 		UI_draw_cursor();
+		OS_draw_cursor();
 		update_info();
 		if (Horde_get_counter(HORDE_COUNTER_ON) + Horde_get_counter(HORDE_COUNTER_OFF) == 0) {
 			score += (level * efficiency / iteration);

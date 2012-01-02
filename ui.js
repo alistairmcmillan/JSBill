@@ -4,6 +4,7 @@ var dialog_strings
 var menu_strings
 var timer = 0;
 var sprites;
+var grabbedos;
 
 /*
  * Timer operations
