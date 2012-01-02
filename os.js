@@ -5,7 +5,7 @@ var osheight = 24;
 
 var MIN_PC = 6;		/* OS >= MIN_PC means the OS is a PC OS */
 
-var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd"];
+var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd", "beos"];
 var NUM_OS = osname.length;
 
 var cursor = [];		/* array of OS cursors (drag/drop) */
