@@ -284,7 +284,6 @@ function main() {
 		UI_set_pausebutton(0);
 	UI_main_loop();
 	
-//	ctx.font = "bold 12px sans-serif";
 //	ctx.textAlign = "center";
 //	ctx.fillText("Click to start", 200, 200);
 }

@@ -125,8 +125,6 @@ function UI_set_pausebutton(action) {
 			document.pausebtn.disabled=false;
 		else
 			document.pausebtn.disabled=true;
-//	} else {
-//		console.log("UI_set_pausebutton - document.all  || document.getElementByid didn't work");
 	}
 
 //	document.pausebtn.disabled=true;
@@ -163,9 +161,7 @@ function UI_load_cursor(name) {
 	return image;
 }
 
-// TODO
 function UI_intersect(x1, y1, w1, h1, x2, y2, w2, h2) {
-	// TODO	 ((Math.abs(computers[j].x - x) < 55) && (Math.abs(computers[j].y - y) < 45))
 	return ((Math.abs(x2 - x1 + (w2 - w1) / 2) < (w1 + w2) / 2) && (Math.abs(y2 - y1 + (h2 - h1) / 2) < (h1 + h2) / 2));
 }
 
