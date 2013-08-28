@@ -564,14 +564,14 @@ function update_in(bill) {
 		bill.target_x = computer.x + compwidth - BILL_OFFSET_X;
 		bill.target_y = computer.y + BILL_OFFSET_Y;
 	}
-	bill.index++;
+	bill.index+=1;
 	bill.index %= WCELS;
 	bill.y_offset += (8 * (bill.index % 2) - 4);
 }
 
 function network_clear_stray(bill) {
 	var i;
-	for (i = 0; i < ncomputers; i++) {
+	for (i = 0; i < ncomputers; i+=1) {
 		if (computers[i].stray === bill) {
 			computers[i].stray = null;
 		}
@@ -619,7 +619,7 @@ function update_at(bill) {
 			computer.stray = null;
 		}
 	} else {
-		bill.index++;
+		bill.index+=1;
 	}
 	if (bill.index === 13) {
 		bill.y_offset = -15;
@@ -701,7 +701,7 @@ function update_at(bill) {
 function update_out(bill) {
 	if (ui_intersect(bill.x, bill.y, billwidth, billheight, 0, 0, screensize, screensize)) {
 		bill_move(bill, FAST);
-		bill.index++;
+		bill.index+=1;
 		bill.index %= WCELS;
 		bill.y_offset += (8 * (bill.index % 2) - 4);
 	} else {
@@ -729,7 +729,7 @@ function horde_move_bill(bill) {
 function update_dying(bill) {
 	if (bill.index < DCELS - 1) {
 		bill.y_offset += (bill.index * GRAVITY);
-		bill.index++;
+		bill.index+=1;
 	} else {
 		bill.y += bill.y_offset;
 		if (bill.cargo < 0 || bill.cargo === OS_WINGDOWS) {
@@ -835,7 +835,7 @@ function computer_setup(computer, index) {
 		y = RAND(border, screensize - border - compheight);
 		flag = 1;
 		/* check for conflicting computer placement */
-		for (j = 0; j < index && flag; j++) {
+		for (j = 0; j < index && flag; j+=1) {
 			c = computers[j];
 			twidth = compwidth - BILL_OFFSET_X + bill_width();
 			if (ui_intersect(x, y, twidth, compheight, c.x, c.y, twidth, compheight)) {
@@ -1036,7 +1036,7 @@ function bucket_clicked(x, y) {
 
 function bucket_release(x, y) {
 	var i, cable;
-	for (i = 0; i < ncables; i++) {
+	for (i = 0; i < ncables; i+=1) {
 		cable = cables[i];
 		if (cable_onspark(cable, x, y)) {
 			cable_reset(cable);
@@ -1077,7 +1077,7 @@ function network_setup() {
 	if (cables !== null) {
 		cables.length = 0;
 	}
-	for (i = 0; i < ncomputers; i++) {
+	for (i = 0; i < ncomputers; i+=1) {
 		computers[i] = new Computer();
 		if (!computer_setup(computers[i], i)) {
 			ncomputers = i - 1;
@@ -1088,7 +1088,7 @@ function network_setup() {
 	counters[NETWORK_COUNTER_BASE] = ncomputers;
 	counters[NETWORK_COUNTER_WIN] = 0;
 	ncables = Math.min(level, ncomputers / 2);
-	for (i = 0; i < ncables; i++) {
+	for (i = 0; i < ncables; i+=1) {
 		cables[i] = new Cable();
 		cable_setup(cables[i]);
 	}
@@ -1097,24 +1097,24 @@ function network_setup() {
 /* redraws the computers at their location with the proper image */
 function network_draw() {
 	var i;
-	for (i = 0; i < ncables; i++) {
+	for (i = 0; i < ncables; i+=1) {
 		cable_draw(cables[i]);
 	}
-	for (i = 0; i < ncomputers; i++) {
+	for (i = 0; i < ncomputers; i+=1) {
 		computer_draw(computers[i]);
 	}
 }
 
 function network_update() {
 	var i;
-	for (i = 0; i < ncables; i++) {
+	for (i = 0; i < ncables; i+=1) {
 		cable_update(cables[i]);
 	}
 }
 
 function network_toasters() {
 	var i;
-	for (i = 0; i < ncomputers; i++) {
+	for (i = 0; i < ncomputers; i+=1) {
 		computers[i].type = COMPUTER_TOASTER;
 		computers[i].os = OS_OFF;
 	}
@@ -1232,7 +1232,7 @@ function horde_process_click(x, y) {
 			comp.stray = bill;
 		}
 		bill_set_dying(bill);
-		counter++;
+		counter+=1;
 	}
 	return counter;
 }
@@ -1343,7 +1343,7 @@ function mouse_button_release() {
 		return;
 	}
 
-	for (i = 0; i < ncomputers; i++) {
+	for (i = 0; i < ncomputers; i+=1) {
 		computer = computers[i];
 
 		if (computer_on(computer, mousex, mousey) &&
@@ -1413,7 +1413,7 @@ function game_update() {
 		setup_level(++level);
 		break;
 	}
-	iteration++;
+	iteration+=1;
 }
 
 function game_score() {
