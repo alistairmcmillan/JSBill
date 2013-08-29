@@ -3,16 +3,125 @@
 <head>
 <title>XBill</title>
 <style>
-	body {
-		font-family: sans-serif;
-		text-align: center;
-	}
-	div#footer {
-		clear: both;
-	}
+body {
+	font-family: sans-serif;
+	text-align: center;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, sans-serif;
+	font-size: 12px;
+	line-height: 12px;
+}
+
+div {
+	margin: 0px auto;
+}
+
+div#footer {
+	clear: both;
+}
+
+div#menubar {
+	background: #d4d0c8;
+	margin: 0px auto;
+	text-align: left;
+}
+
+div#menubar ul ul {
+	display: none;
+}
+
+div#menubar ul li:hover > ul {
+	display: block;
+}
+
+div#menubar ul {
+	padding: 0 0;
+	list-style: none;
+	position: relative;
+	display: inline-table;
+}
+div#menubar ul:after {
+	clear: both;
+	content: "";
+	display: block;
+}
+
+div#menubar ul li {
+	float: left;
+}
+
+div#menubar ul li:hover {
+	background: #d4d0c8;
+}
+
+div#menubar ul li:hover a {
+	color: #000;
+}
+
+div#menubar ul li a {
+	display: block;
+	padding: 5px 10px;
+	color: #000;
+	text-align: left;
+	text-decoration: none;
+}
+
+div#menubar ul ul {
+	background: #d4d0c8;
+	border-radius: 0px;
+	box-shadow: 0px 0px 9px rgba(0,0,0,0.15);
+	padding: 0;
+	position: absolute;
+	top: 100%;
+}
+
+div#menubar ul ul li {
+	float: none;
+}
+
+div#menubar ul ul li a {
+	padding: 3px 20px;
+	color: #000;
+}
+
+div#menubar ul ul li a:hover {
+	background: #0a246a;
+	color: white;
+}
+
+div#scorediv, div#newscorediv {
+	position:absolute;
+	top:25%;
+	left:50%;
+	background-color:#d4d0c8;
+	z-index:1002;
+	overflow:auto;
+	width:40em;
+	height:40em;
+	margin-left:-20em;
+	margin-top:-10em;
+	border-top:2px solid white;
+	border-left:2px solid white;
+	border-right:2px solid black;
+	border-bottom:2px solid black;
+	text-align: center;
+}
+
+div#scorediv table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div#scorediv th, div#scorediv td {
+	padding-left: 5px;
+	padding-right: 5px;
+	text-align: center;
+}
+
 </style>
 <script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="jquery.cookie.js"></script>
 <script>
 function preload(arrayOfImages) {
     $(arrayOfImages).each(function(){
@@ -34,8 +143,6 @@ function enableButtons() {
 </script>
 </head>
 <body style="background-color: white;" onload="enableButtons();">
-<img src="images/logo.png" width="260" height="65" alt="xBill" /><br />
-A JavaScript port of <a href="http://xbill.org/">Xbill</a><br />
 
 <div style="font-size:12px;display:none;">
 The Story:<br /><br />
@@ -49,18 +156,34 @@ As System Administrator/Exterminator, your job is to keep Bill from succeeding
 at his task.
 </div>
 
-<div style="margin-top:20px;">
-<button id="newbtn" onclick="JavaScript:game_start(1)">New Game</button>
-<button id="pausebtn" onclick="JavaScript:game_stop()">Pause</button>
-<button id="warpbtn" onclick="JavaScript:game_warp_to_level()">Warp to Level...</button>
+<!-- menubar is 26 pixels wider than game board -->
+<div id="menubar" style="width:400px;margin-left:auto;margin-right:auto;">
+	<ul>
+		<li><a href="#"><u>G</u>ame</a>
+			<ul id="gamemenu">
+				<li><a href="JavaScript:game_start(1);">New&nbsp;Game</a></li>
+				<li><a href="JavaScript:game_stop()" id="pauseHref">Pause&nbsp;Game</a></li>
+				<li><a href="JavaScript:scorelist_show()">View&nbsp;High&nbsp;Scores</a></li>
+				<li><a href="JavaScript:game_warp_to_level()">Warp&nbsp;to&nbsp;Level...</a></li>
+			</ul>
+		</li>
+	<li><a href="#"><u>I</u>nfo</a>
+		</li>
+	</ul>
 </div>
 
-<div style="float:left;width:600px;margin-left:auto;margin-right:auto;">
-<canvas id="canvas" style="border:1px solid black;margin-top:20px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas>
+<div style="width:600px;margin-left:auto;margin-right:auto;">
+<canvas id="canvas" style="border:1px solid black;margin-top:20px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas><br />
+<a href="http://xbill.org/">XBill</a> was created by Brian Wellington & Matias Duarte.<br />
+Ported to the web by <a href="http://www.facebook.com/alistairmcmillan">Alistair McMillan</a>.
 </div>
 
-<div style="font-size:12px;float:right;text-align:left;width:200px;margin-left:auto;margin-right:auto;">
-<table id="scoretable"></table>
+<div id='scorediv' style='display:none;'>
+<h1>High Scores</h1>
+<table id='scoretable'>
+<tbody></tbody>
+</table>
+<button id='hide' onClick='JavaScript:scorelist_hide();'>OK</button>
 </div>
 
 <script type="text/javascript" src="game.js"></script>

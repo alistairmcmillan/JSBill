@@ -32,7 +32,7 @@ var timer = 0;
 var sprites;
 var grabbedos;
 
-var NUMSCORES = 10;
+var NUMSCORES = 0;
 var score_str;
 
 var BILL_STATE_IN = 1;
@@ -195,12 +195,11 @@ function ui_draw_line(x1, y1, x2, y2) {
  */
 
 function ui_set_pausebutton(action) {
-	if (document.all || document.getElementByid) {
-		if (action === 1) {
-			document.pausebtn.disabled = false;
-		} else {
-			document.pausebtn.disabled = true;
-		}
+	if (action === 1) {
+		document.getElementById('pauseHref').disabled = false;
+		document.getElementById('pauseHref').textContent = 'Pause Game';
+	} else {
+		document.getElementById('pauseHref').textContent = 'Resume Game';
 	}
 }
 
@@ -217,70 +216,39 @@ function ui_load_pix() {
  * Scorelist
  */
 
-var scores = [
-    {
-        "score": 2000,
-        "level": 10,
-        "name": "brian"
-    },
-    {
-        "score": 1800,
-        "level": 9,
-        "name": "matias"
-    },
-    {
-        "score": 1600,
-        "level": 8,
-        "name": "me"
-    },
-    {
-        "score": 1400,
-        "level": 7,
-        "name": "me"
-    },
-    {
-        "score": 1200,
-        "level": 6,
-        "name": "me"
-    },
-    {
-        "score": 1000,
-        "level": 5,
-        "name": "me"
-    },
-    {
-        "score": 800,
-        "level": 4,
-        "name": "me"
-    },
-    {
-        "score": 600,
-        "level": 3,
-        "name": "me"
-    },
-    {
-        "score": 400,
-        "level": 2,
-        "name": "me"
-    },
-    {
-        "score": 200,
-        "level": 1,
-        "name": "me"
-    }
-];
+var scores = new Array([]);
 
-function scorelist_read() {
-	if ($.cookie("scores") !== null) {
-		scores = JSON.parse($.cookie("scores"));
+function scorelist_show() {
+	if(document.getElementById('scorediv').style.display === "none") {
+		document.getElementById('scorediv').style.display = "block";
+	} else {
+		document.getElementById('scorediv').style.display = "none";
 	}
 }
 
-function scorelist_write() {
-	var convertedscores;
+function scorelist_hide() {
+	document.getElementById('scorediv').style.display = "none";
+}
 
-	convertedscores = JSON.stringify(scores);
-	$.cookie('scores', convertedscores, { expires: 3650 });
+function scorelist_read() {
+    $.ajax({
+		url: 'get_scores.php', data: "", dataType: 'json',  success: function(rows)
+		{
+			var currentLevel = 0;
+			$('table#scoretable tbody tr').remove();
+			for(var i = 0; i < rows.length; i++) {
+				var t = rows[i].date.split(/[- :]/);
+				var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+				scores.push({"score": rows[i].score, "level": rows[i].level, "name": rows[i].name, "date": rows[i].date });
+				NUMSCORES++;
+				$('table#scoretable tbody').append('<tr><td>' + rows[i].name + '</td><td>' + rows[i].level + '</td><td>' + rows[i].score + '</td><td>' + ( d.getHours() < 10 ? "0" : "" ) + d.getHours() + ':' + ( d.getMinutes() < 10 ? "0" : "" ) + d.getMinutes() + ' ' + d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + '</td></tr>');
+			}
+			scores.shift();
+			NUMSCORES = scores.length;
+			console.log(NUMSCORES);
+			console.log(scores);
+		}
+	});
 }
 
 /*  Add new high score to list   */
@@ -308,17 +276,13 @@ function scorelist_recalc(str, level, score) {
 	scores[i].name = tname;
 	scores[i].level = level;
 	scores[i].score = Math.floor(score);
-}
-
-function scorelist_update() {
-	var i, scoreTableId, score_html;
-
-	scoreTableId = document.getElementById("scoretable");
-	score_html = "<tr><th colspan=3>High Scores</th></tr><tr><td>Name</td><td>Level</td><td>Score</td></tr>";
-	for (i = 0; i < scores.length; i++) {
-		score_html = score_html + "<tr><td>" + scores[i].name + "</td><td>" + scores[i].level + "</td><td>" + scores[i].score + "</td></tr>";
-	}
-	scoreTableId.innerHTML = score_html;
+	$.ajax({
+		url: 'save_score.php', data: { level: level, name: tname, score: Math.floor(score), date: Date.now() }, dataType: 'json',  success: function(rows)
+		{
+			// Update copy of scores since we've just added one
+			scorelist_read();
+		}
+	});
 }
 
 function scorelist_ishighscore(val) {
@@ -1304,9 +1268,9 @@ function game_add_high_score(str) {
 	scorelist_recalc(str, level, score);
 }
 
-function mouse_moved(event) {
-	mousex = event.pageX - canvas.offsetLeft;
-	mousey = event.pageY - canvas.offsetTop;
+function mouse_moved(x, y, canvas) {
+	mousex = x - canvas.offsetLeft;
+	mousey = y - canvas.offsetTop;
 }
 
 function mouse_button_press() {
@@ -1399,13 +1363,10 @@ function game_update() {
 				name = "Anonymous";
 			}
 			game_add_high_score(name);
-			scorelist_update();
-			scorelist_write();
 		}
 		ui_kill_timer();
 		ui_set_pausebutton(0);
 		state = STATE_WAITING;
-		scorelist_write();
 		break;
 	case STATE_BETWEEN:
 		alert("After Level  " + level + "\nScore: " + Math.floor(score));
@@ -1427,20 +1388,42 @@ function main() {
 	ctx.font = "bold 12px sans-serif";
 	$("canvas").unbind();
 
-	$("canvas").bind('mousemove', function (event) {
-		mouse_moved(event);
-	});
-
-	$("canvas").bind('touchstart', function (event) {
+	$("canvas").bind('gestureStart', function (event) {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('mousedown touchstart', function (event) {
+	$("canvas").bind('gestureChange', function (event) {
+		event.preventDefault();
+	});
+
+	$("canvas").bind('gestureEnd', function (event) {
+		event.preventDefault();
+	});
+
+	$("canvas").bind('touchmove', function (event) {
+		event.preventDefault();
+	});
+
+	$("canvas").bind('mousedown', function (event) {
+		mouse_moved(event.pageX, event.pageY, canvas);
 		event.preventDefault();
 		mouse_button_press();
 	});
 
-	$("canvas").bind('mouseup touchend', function (event) {
+	$("canvas").bind('mouseup', function (event) {
+		mouse_moved(event.pageX, event.pageY, canvas);
+		event.preventDefault();
+		mouse_button_release();
+	});
+
+	$("canvas").bind('touchstart', function (event) {
+		mouse_moved(event.targetTouches[0].pageX, event.targetTouches[0].pageY, canvas);
+		event.preventDefault();
+		mouse_button_press();
+	});
+
+	$("canvas").bind('touchend', function (event) {
+		mouse_moved(event.targetTouches[0].pageX, event.targetTouches[0].pageY, canvas);
 		event.preventDefault();
 		mouse_button_release();
 	});
@@ -1448,7 +1431,6 @@ function main() {
 	ctx.clearRect(0, 0, screensize, screensize);
 
 	scorelist_read();
-	scorelist_update();
 
 	ui_load_pix();
 	bill_load_pix();
