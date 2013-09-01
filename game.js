@@ -1223,14 +1223,16 @@ function game_start(newlevel) {
 }
 
 function game_stop() {
-	if (paused === 0) {
-		ui_kill_timer();
-		ui_set_pausebutton(0);
-		paused = 1;
-	} else {
-		ui_restart_timer();
-		ui_set_pausebutton(1);
-		paused = 0;
+	if (state !== STATE_WAITING) { // i.e. can't pause/resume a game that hasn't started
+		if (paused === 0) {
+			ui_kill_timer();
+			ui_set_pausebutton(0);
+			paused = 1;
+		} else {
+			ui_restart_timer();
+			ui_set_pausebutton(1);
+			paused = 0;
+		}
 	}
 }
 
