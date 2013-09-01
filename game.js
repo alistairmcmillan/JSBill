@@ -12,7 +12,6 @@ var STATE_END = 3;
 var STATE_WAITING = 4;
 
 /* Score related constants */
-var SCORE_ENDLEVEL = -1;
 var SCORE_BILLPOINTS = 5;
 
 var gamestate;
@@ -20,20 +19,14 @@ var efficiency;
 var score, level, iteration;
 var downcursor;
 var grabbed;
-var gui;
 var screensize = 400;
 var paused = 0;
 
-var playing = 0;
-var methods;
-var dialog_strings;
-var menu_strings;
 var timer = 0;
 var sprites;
 var grabbedos;
 
 var NUMSCORES = 0;
-var score_str;
 
 var BILL_STATE_IN = 1;
 var BILL_STATE_AT = 2;
@@ -54,7 +47,6 @@ var FAST = 1;
 
 var WCELS = 4;                 /* # of bill walking animation frames */
 var DCELS = 5;                 /* # of bill dying animation frames */
-var ACELS = 13;                /* # of bill switching OS frames */
 
 var billwidth, billheight;
 
@@ -72,7 +64,6 @@ var compheight = 45;
 
 var SPARK_SPEED = 4;
 
-//var cursor;
 var bucketgrabbed = 0;
 var bucketwidth = 24;
 var bucketheight = 24;
@@ -85,12 +76,9 @@ var osheight = 24;
 var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd", "beos"];
 var NUM_OS = osname.length;
 
-//var cursor = [];		/* array of OS cursors (drag/drop) */
-
 var NETWORK_COUNTER_OFF = 0;
 var NETWORK_COUNTER_BASE = 1;
 var NETWORK_COUNTER_WIN = 2;
-var NETWORK_COUNTER_MAX = 2;
 
 var STD_MAX_COMPUTERS = 20;
 
@@ -107,9 +95,6 @@ var MAX_BILLS = 100;		/* max Bills per level */
 var HORDE_COUNTER_OFF = 0;
 var HORDE_COUNTER_ON = 0;
 
-function timer_tick() {}
-function game_update() {}
-
 function RAND(lb, ub) {
 	return Math.floor(Math.random() * ((ub) - (lb) + 1) + (lb));
 }
@@ -122,14 +107,10 @@ function BORDER(size) {		/* at least this far from a side */
  * Timer operations
  */
 
-function start_timer(ms) {
-	if (timer === 0) {
-		timer = setInterval(timer_tick, ms);
-	}
-}
-
 function ui_restart_timer() {
-	start_timer(200);
+	if (timer === 0) {
+		timer = setInterval(timer_tick, 200);
+	}
 }
 
 function timer_tick() {
@@ -138,33 +119,11 @@ function timer_tick() {
 	return true;
 }
 
-function stop_timer() {
+function ui_kill_timer() {
 	if (timer !== 0) {
 		clearInterval(timer);
 	}
 	timer = 0;
-}
-
-function timer_active() {
-	return (!!timer);
-}
-
-function ui_kill_timer() {
-	stop_timer();
-}
-
-function ui_pause_game() {
-	if (timer_active()) {
-		playing = 1;
-	}
-	ui_kill_timer();
-}
-
-function ui_resume_game() {
-	if (playing && !timer_active()) {
-		ui_restart_timer();
-	}
-	playing = 0;
 }
 
 /*
@@ -177,10 +136,6 @@ function bucket_draw() {
 	} else {
 		ctx.drawImage(sprites, 336, 124, 24, 24, mousex - 12, mousey - 12, 24, 24);
 	}
-}
-
-function ui_draw_cursor() {
-	bucket_draw();
 }
 
 function ui_draw_line(x1, y1, x2, y2) {
@@ -249,7 +204,6 @@ function scorelist_read() {
     $.ajax({
 		url: 'get_scores.php', data: "", dataType: 'json',  success: function(rows)
 		{
-			var currentLevel = 0;
 			$('table#scoretable tbody tr').remove();
 			for(var i = 0; i < rows.length; i++) {
 				var t = rows[i].date.split(/[- :]/);
@@ -768,14 +722,6 @@ function bill_width() {
 	return billwidth;
 }
 
-function bill_height() {
-	return billheight;
-}
-
-function bill_get_state(bill) {
-	return bill.state;
-}
-
 /*
  * Computer
  */
@@ -960,8 +906,7 @@ function cable_update(cable) {
 						counter = NETWORK_COUNTER_BASE;
 					}
 					network_inc_counter(counter, -1);
-					network_inc_counter(NETWORK_COUNTER_WIN,
-							    1);
+					network_inc_counter(NETWORK_COUNTER_WIN, 1);
 					comp2.os = OS_WINGDOWS;
 				}
 				cable.active = 0;
@@ -978,7 +923,7 @@ function cable_update(cable) {
 		}
 	} else {
 		if ((comp1.os === OS_WINGDOWS) === (comp2.os === OS_WINGDOWS)) {
-			;
+			// If WINGDOWS at both ends, do nothing
 		} else if (comp1.os === OS_WINGDOWS || comp2.os === OS_WINGDOWS) {
 			cable.active = 1;
 			cable.delay = SPARK_DELAY(level);
@@ -1008,7 +953,6 @@ function cable_reset(cable) {
 /*
  * Bucket
  */
-
 function bucket_clicked(x, y) {
 	return (x > 0 && x < bucketwidth && y > 0 && y < bucketheight);
 }
@@ -1032,10 +976,6 @@ function os_draw_cursor() {
 	if (grabbed) {
 		ctx.drawImage(sprites, grabbedos * 28, 124, 24, 24, mousex - 14, mousey - 12, 28, 24);
 	}
-}
-
-function os_set_cursor(index) {
-	grabbedos = index;
 }
 
 /*
@@ -1265,22 +1205,6 @@ function update_info() {
 	efficiency += ((100 * base - 10 * win) / units);
 }
 
-function game_warp_to_level() {
-	var lev;
-	lev = prompt("Warp to level?", "1");
-	if (gamestate === STATE_PLAYING) {
-		if (lev <= level) {
-			return;
-		}
-		setup_level(lev);
-	} else {
-		if (lev <= 0) {
-			return;
-		}
-		game_start(lev);
-	}
-}
-
 function game_add_high_score(str) {
 	scorelist_recalc(str, level, score);
 }
@@ -1304,7 +1228,7 @@ function mouse_button_press() {
 
 	grabbed = horde_clicked_stray(mousex, mousey);
 	if (grabbed !== null) {
-		os_set_cursor(grabbed.cargo);
+		grabbedos = grabbed.cargo;
 		return;
 	}
 
@@ -1359,7 +1283,6 @@ function game_update() {
 		network_draw();
 		horde_update(iteration);
 		horde_draw();
-		ui_draw_cursor();
 		os_draw_cursor();
 		update_info();
 		if (horde_get_counter(HORDE_COUNTER_ON) + horde_get_counter(HORDE_COUNTER_OFF) === 0) {
@@ -1392,10 +1315,6 @@ function game_update() {
 		break;
 	}
 	iteration+=1;
-}
-
-function game_score() {
-	return score;
 }
 
 function main() {
