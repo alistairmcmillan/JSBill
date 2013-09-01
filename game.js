@@ -73,7 +73,7 @@ var compheight = 45;
 var SPARK_SPEED = 4;
 
 //var cursor;
-var bucketgrabbed;
+var bucketgrabbed = 0;
 var bucketwidth = 24;
 var bucketheight = 24;
 
@@ -1421,14 +1421,16 @@ function main() {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('mousedown', function (event) {
+	$("canvas").bind('mousemove', function (event) {
 		mouse_moved(event.pageX, event.pageY, canvas);
+	});
+
+	$("canvas").bind('mousedown', function (event) {
 		event.preventDefault();
 		mouse_button_press();
 	});
 
 	$("canvas").bind('mouseup', function (event) {
-		mouse_moved(event.pageX, event.pageY, canvas);
 		event.preventDefault();
 		mouse_button_release();
 	});
