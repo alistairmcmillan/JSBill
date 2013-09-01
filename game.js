@@ -210,7 +210,7 @@ function scorelist_read() {
 				var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
 				scores.push({"score": rows[i].score, "level": rows[i].level, "name": rows[i].name, "date": rows[i].date });
 				NUMSCORES++;
-				$('table#scoretable tbody').append('<tr><td>' + rows[i].name + '</td><td>' + rows[i].level + '</td><td>' + rows[i].score + '</td><td>' + ( d.getHours() < 10 ? "0" : "" ) + d.getHours() + ':' + ( d.getMinutes() < 10 ? "0" : "" ) + d.getMinutes() + ' ' + d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear() + '</td></tr>');
+				$('table#scoretable tbody').append('<tr><td>' + rows[i].name + '</td><td>' + rows[i].level + '</td><td>' + rows[i].score + '</td><td>' + ( d.getHours() < 10 ? "0" : "" ) + d.getHours() + ':' + ( d.getMinutes() < 10 ? "0" : "" ) + d.getMinutes() + ' ' + ( d.getDate() < 10 ? "0" : "" ) + d.getDate() + '/' + ( (d.getMonth()+1) < 10 ? "0" : "" ) + (d.getMonth()+1) + '/' + d.getFullYear() + '</td></tr>');
 			}
 			scores.shift();
 			NUMSCORES = scores.length;
