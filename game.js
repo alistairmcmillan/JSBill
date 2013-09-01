@@ -213,6 +213,21 @@ function ui_load_pix() {
 }
 
 /*
+ * Story
+ */
+function story_show() {
+	if(document.getElementById('storydiv').style.display === "none") {
+		document.getElementById('storydiv').style.display = "block";
+	} else {
+		document.getElementById('storydiv').style.display = "none";
+	}
+}
+
+function story_hide() {
+	document.getElementById('storydiv').style.display = "none";
+}
+
+/*
  * Scorelist
  */
 

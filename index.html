@@ -91,7 +91,7 @@ div#menubar ul ul li a:hover {
 	color: white;
 }
 
-div#scorediv, div#newscorediv {
+div#scorediv, div#newscorediv, div#storydiv {
 	position:absolute;
 	top:25%;
 	left:50%;
@@ -120,6 +120,17 @@ div#scorediv th, div#scorediv td {
 	text-align: center;
 }
 
+div#storydiv {
+	width:30em;
+	height:31em;
+	margin-left:-15em;
+}
+
+div#storydiv div {
+	margin-left: 70px;
+	margin-right: 70px;
+}
+
 </style>
 <script type="text/javascript" src="jquery.js"></script>
 <script>
@@ -139,7 +150,11 @@ preload([
 </head>
 <body style="background-color: white;">
 
-<div style="font-size:12px;display:none;">
+<div id='storydiv' style='display:block;'>
+<br /><br />
+<img src='images/logo.png' width=260 height=65/>
+<br /><br />
+<div>
 The Story:<br /><br />
 Yet again, the fate of the world rests in your hands!  An evil computer hacker,
 known only by his handle 'Bill', has created the ultimate computer virus.  A
@@ -148,7 +163,9 @@ a toaster oven.  (oooh!) 'Bill' has cloned himself into a billion-jillion
 micro-Bills.  Their sole purpose is to deliver the nefarious virus, which has
 been cleverly diguised as a popular operating system.<br /><br />
 As System Administrator/Exterminator, your job is to keep Bill from succeeding
-at his task.
+at his task.<br /><br />
+</div>
+<button id='hide' onClick='JavaScript:story_hide();'>OK</button>
 </div>
 
 <!-- menubar is 26 pixels wider than game board -->
@@ -157,12 +174,15 @@ at his task.
 		<li><a href="#"><u>G</u>ame</a>
 			<ul id="gamemenu">
 				<li><a href="JavaScript:game_start(1);">New&nbsp;Game</a></li>
-				<li><a href="JavaScript:game_stop()" id="pauseHref">Pause&nbsp;Game</a></li>
-				<li><a href="JavaScript:scorelist_show()">View&nbsp;High&nbsp;Scores</a></li>
-				<li><a href="JavaScript:game_warp_to_level()">Warp&nbsp;to&nbsp;Level...</a></li>
+				<li><a href="JavaScript:game_stop();" id="pauseHref">Pause&nbsp;Game</a></li>
+				<li><a href="JavaScript:scorelist_show();">View&nbsp;High&nbsp;Scores</a></li>
+				<li><a href="JavaScript:game_warp_to_level();">Warp&nbsp;to&nbsp;Level...</a></li>
 			</ul>
 		</li>
-	<li><a href="#"><u>I</u>nfo</a>
+		<li><a href="JavaScript:menu_show()"><u>I</u>nfo</a>
+			<ul id="infomenu">
+				<li><a href="JavaScript:story_show();">Story&nbsp;of&nbsp;XBill</a></li>
+			</ul>
 		</li>
 	</ul>
 </div>
