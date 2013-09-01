@@ -15,7 +15,7 @@ var STATE_WAITING = 4;
 var SCORE_ENDLEVEL = -1;
 var SCORE_BILLPOINTS = 5;
 
-var state;
+var gamestate;
 var efficiency;
 var score, level, iteration;
 var downcursor;
@@ -1215,7 +1215,7 @@ function setup_level(newlevel) {
 }
 
 function game_start(newlevel) {
-	state = STATE_PLAYING;
+	gamestate = STATE_PLAYING;
 	score = 0;
 	ui_restart_timer();
 	ui_set_pausebutton(1);
@@ -1223,7 +1223,7 @@ function game_start(newlevel) {
 }
 
 function game_stop() {
-	if (state !== STATE_WAITING) { // i.e. can't pause/resume a game that hasn't started
+	if (gamestate !== STATE_WAITING) { // i.e. can't pause/resume a game that hasn't started
 		if (paused === 0) {
 			ui_kill_timer();
 			ui_set_pausebutton(0);
@@ -1253,7 +1253,7 @@ function update_info() {
 function game_warp_to_level() {
 	var lev;
 	lev = prompt("Warp to level?", "1");
-	if (state === STATE_PLAYING) {
+	if (gamestate === STATE_PLAYING) {
 		if (lev <= level) {
 			return;
 		}
@@ -1278,7 +1278,7 @@ function mouse_moved(x, y, canvas) {
 function mouse_button_press() {
 	var counter;
 
-	if (state !== STATE_PLAYING || paused === 1) {
+	if (gamestate !== STATE_PLAYING || paused === 1) {
 		return;
 	}
 
@@ -1300,7 +1300,7 @@ function mouse_button_press() {
 function mouse_button_release() {
 	var i, computer, counter;
 
-	if (state !== STATE_PLAYING || paused === 1) {
+	if (gamestate !== STATE_PLAYING || paused === 1) {
 		return;
 	}
 
@@ -1336,7 +1336,7 @@ function mouse_button_release() {
 function game_update() {
 	var name;
 
-	switch (state) {
+	switch (gamestate) {
 	case STATE_PLAYING:
 		ctx.clearRect(0, 0, screensize, screensize);
 		bucket_draw();
@@ -1349,10 +1349,10 @@ function game_update() {
 		update_info();
 		if (horde_get_counter(HORDE_COUNTER_ON) + horde_get_counter(HORDE_COUNTER_OFF) === 0) {
 			score += (level * efficiency / iteration);
-			state = STATE_BETWEEN;
+			gamestate = STATE_BETWEEN;
 		}
 		if ((network_get_counter(NETWORK_COUNTER_BASE) + network_get_counter(NETWORK_COUNTER_OFF)) <= 1) {
-			state = STATE_END;
+			gamestate = STATE_END;
 		}
 		break;
 	case STATE_END:
@@ -1368,11 +1368,11 @@ function game_update() {
 		}
 		ui_kill_timer();
 		ui_set_pausebutton(0);
-		state = STATE_WAITING;
+		gamestate = STATE_WAITING;
 		break;
 	case STATE_BETWEEN:
 		alert("After Level  " + level + "\nScore: " + Math.floor(score));
-		state = STATE_PLAYING;
+		gamestate = STATE_PLAYING;
 		setup_level(++level);
 		break;
 	}
@@ -1437,7 +1437,7 @@ function main() {
 	ui_load_pix();
 	bill_load_pix();
 
-	state = STATE_WAITING;
+	gamestate = STATE_WAITING;
 	if (level) {
 		game_start(level);
 	} else {
