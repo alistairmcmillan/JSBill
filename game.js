@@ -1277,11 +1277,11 @@ function game_update() {
 	switch (gamestate) {
 	case STATE_PLAYING:
 		ctx.clearRect(0, 0, screensize, screensize);
-		bucket_draw();
 		network_update();
 		network_draw();
 		horde_update(iteration);
 		horde_draw();
+		bucket_draw();
 		os_draw_cursor();
 		update_info();
 		if (horde_get_counter(HORDE_COUNTER_ON) + horde_get_counter(HORDE_COUNTER_OFF) === 0) {
