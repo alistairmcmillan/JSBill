@@ -1200,7 +1200,7 @@ function update_info() {
 	win = network_get_counter(NETWORK_COUNTER_WIN);
 	units = ncomputers;
 	str = "Bill:" + on_screen + "/" + off_screen + "  System:" + base + "/" + off + "/" + win + "  Level:" + level + "  Score:" + Math.floor(score);
-	ctx.fillText(str, 0, screensize);
+	ctx.fillText(str, 0, screensize-1);
 	efficiency += ((100 * base - 10 * win) / units);
 }
 

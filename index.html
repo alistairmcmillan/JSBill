@@ -4,6 +4,7 @@
 <title>XBill</title>
 <style>
 body {
+	background: lightblue;
 	font-family: sans-serif;
 	text-align: center;
 	border: 0;
@@ -24,7 +25,7 @@ div#footer {
 
 div#menubar {
 	background: #d4d0c8;
-	margin: 0px auto;
+	margin-top: 25px;
 	text-align: left;
 }
 
@@ -39,6 +40,7 @@ div#menubar ul li:hover > ul {
 div#menubar ul {
 	padding: 0 0;
 	list-style: none;
+	margin: 0px;
 	position: relative;
 	display: inline-table;
 }
@@ -148,7 +150,7 @@ preload([
 
 </script>
 </head>
-<body style="background-color: white;">
+<body>
 
 <div id='storydiv' style='display:block;'>
 <br /><br />
@@ -168,7 +170,6 @@ at his task.<br /><br />
 <button id='hide' onClick='JavaScript:story_hide();'>OK</button>
 </div>
 
-<!-- menubar is 26 pixels wider than game board -->
 <div id="menubar" style="width:400px;margin-left:auto;margin-right:auto;">
 	<ul>
 		<li><a href="#"><u>G</u>ame</a>
@@ -188,7 +189,7 @@ at his task.<br /><br />
 </div>
 
 <div style="width:600px;margin-left:auto;margin-right:auto;">
-<canvas id="canvas" style="border:1px solid black;margin-top:20px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas><br />
+<canvas id="canvas" style="margin-top:0px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas><br />
 <a href="http://xbill.org/">XBill</a> was created by Brian Wellington & Matias Duarte.<br />
 Ported to the web by <a href="http://www.facebook.com/alistairmcmillan">Alistair McMillan</a>.
 </div>
