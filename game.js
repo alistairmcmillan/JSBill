@@ -96,12 +96,8 @@ var MAX_BILLS = 100;		/* max Bills per level */
 var HORDE_COUNTER_OFF = 0;
 var HORDE_COUNTER_ON = 0;
 
-function RAND(lb, ub) {
+function rand(lb, ub) {
 	return Math.floor(Math.random() * ((ub) - (lb) + 1) + (lb));
-}
-
-function BORDER(size) {		/* at least this far from a side */
-	return size / 10;
 }
 
 /*
@@ -165,7 +161,7 @@ function uiIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 
 function uiLoadPix() {
 	sprites = new Image();
-	sprites.src = 'images/sprites.png';
+	sprites.src = "images/sprites.png";
 }
 
 /*
@@ -203,15 +199,15 @@ function scorelistHide() {
 
 function scorelistRead() {
     $.ajax({
-		url: 'get_scores.php', data: "", dataType: 'json',  success(rows)
+		url: "get_scores.php", data: "", dataType: "json",  success(rows)
 		{
-			$('table#scoretable tbody tr').remove();
+			$("table#scoretable tbody tr").remove();
 			for(var i = 0; i < rows.length; i++) {
 				var t = rows[i].date.split(/[- :]/);
 				var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
 				scores.push({"score": rows[i].score, "level": rows[i].level, "name": rows[i].name, "date": rows[i].date });
 				NUMSCORES++;
-				$('table#scoretable tbody').append('<tr><td>' + rows[i].name + '</td><td>' + rows[i].level + '</td><td>' + rows[i].score + '</td><td>' + ( d.getHours() < 10 ? "0" : "" ) + d.getHours() + ':' + ( d.getMinutes() < 10 ? "0" : "" ) + d.getMinutes() + ' ' + ( d.getDate() < 10 ? "0" : "" ) + d.getDate() + '/' + ( (d.getMonth()+1) < 10 ? "0" : "" ) + (d.getMonth()+1) + '/' + d.getFullYear() + '</td></tr>');
+				$("table#scoretable tbody").append("<tr><td>" + rows[i].name + "</td><td>" + rows[i].level + "</td><td>" + rows[i].score + "</td><td>" + ( d.getHours() < 10 ? "0" : "" ) + d.getHours() + ":" + ( d.getMinutes() < 10 ? "0" : "" ) + d.getMinutes() + " " + ( d.getDate() < 10 ? "0" : "" ) + d.getDate() + "/" + ( (d.getMonth()+1) < 10 ? "0" : "" ) + (d.getMonth()+1) + "/" + d.getFullYear() + "</td></tr>");
 			}
 			scores.shift();
 			NUMSCORES = scores.length;
@@ -247,7 +243,7 @@ function scorelistRecalc(str, level, score) {
 	scores[i].level = level;
 	scores[i].score = Math.floor(score);
 	$.ajax({
-		url: 'save_score.php', data: { level: level, name: tname, score: Math.floor(score), date: Date.now() }, dataType: 'json',  success(rows)
+		url: "save_score.php", data: { level: level, name: tname, score: Math.floor(score), date: Date.now() }, dataType: "json",  success(rows)
 		{
 			// Update copy of scores since we've just added one
 			scorelistRead();
@@ -287,12 +283,12 @@ function Bill() {
 function getBorderBill(bill) {
 	var i;
 
-	i = RAND(0, 3);
+	i = rand(0, 3);
 
 	if (i % 2 === 0) {
-		bill.x = RAND(0, screensize - billwidth);
+		bill.x = rand(0, screensize - billwidth);
 	} else {
-		bill.y = RAND(0, screensize - billheight);
+		bill.y = rand(0, screensize - billheight);
 	}
 
 	switch (i) {
@@ -314,12 +310,12 @@ function getBorderBill(bill) {
 function getBorderTarget(bill) {
 	var i;
 
-	i = RAND(0, 3);
+	i = rand(0, 3);
 
 	if (i % 2 === 0) {
-		bill.targetX = RAND(0, screensize - billwidth);
+		bill.targetX = rand(0, screensize - billwidth);
 	} else {
-		bill.targetY = RAND(0, screensize - billheight);
+		bill.targetY = rand(0, screensize - billheight);
 	}
 
 	switch (i) {
@@ -380,7 +376,7 @@ function billEnter(bill) {
 	bill.cargo = OS_WINGDOWS;
 	bill.x_offset = -2;
 	bill.y_offset = -15;
-	bill.targetC = RAND(0, ncomputers - 1);
+	bill.targetC = rand(0, ncomputers - 1);
 	computer = computers[bill.targetC];
 	bill.targetX = computer.x + compwidth - BILL_OFFSET_X;
 	bill.targetY = computer.y + BILL_OFFSET_Y;
@@ -491,7 +487,7 @@ function updateIn(bill) {
 		return;
 	} else if (!moved) {
 		do {
-			i = RAND(0, ncomputers - 1);
+			i = rand(0, ncomputers - 1);
 		} while (i === bill.targetC);
 		computer = computers[i];
 		bill.targetC = i;
@@ -512,7 +508,7 @@ function networkClearStray(bill) {
 	}
 }
 
-function UNLINK(bill, list) {
+function unlink(bill, list) {
 	if (bill.next !== null) {
 		bill.next.prev = bill.prev;
 	}
@@ -528,9 +524,9 @@ function UNLINK(bill, list) {
 
 function hordeRemoveBill(bill) {
 	if (bill.state === BILL_STATE_STRAY) {
-		strays = UNLINK(bill, strays);
+		strays = unlink(bill, strays);
 	} else {
-		alive = UNLINK(bill, alive);
+		alive = unlink(bill, alive);
 	}
 	networkClearStray(bill);
 }
@@ -655,7 +651,7 @@ function PREPEND(bill, list) {
 }
 
 function hordeMoveBill(bill) {
-	alive = UNLINK(bill, alive);
+	alive = unlink(bill, alive);
 	strays = PREPEND(bill, strays);
 }
 
@@ -737,7 +733,7 @@ function Computer() {
 }
 
 function osRandpc() {
-	return (RAND(MIN_PC, NUM_OS - 1));
+	return (rand(MIN_PC, NUM_OS - 1));
 }
 
 function determineOS(computer) {
@@ -752,13 +748,13 @@ function computerSetup(computer, index) {
 	var j, counter, flag, x, y, border, c, twidth;
 
 	counter = 0;
-	border = BORDER(screensize);
+	border = screensize / 10; /* at least this far from a side */
 	do {
 		if (++counter > 4000) {
 			return 0;
 		}
-		x = RAND(border, screensize - border - compwidth);
-		y = RAND(border, screensize - border - compheight);
+		x = rand(border, screensize - border - compwidth);
+		y = rand(border, screensize - border - compheight);
 		flag = 1;
 		/* check for conflicting computer placement */
 		for (j = 0; j < index && flag; j+=1) {
@@ -771,7 +767,7 @@ function computerSetup(computer, index) {
 	} while (!flag);
 	computer.x = x;
 	computer.y = y;
-	computer.type = RAND(1, NUM_SYS - 1);
+	computer.type = rand(1, NUM_SYS - 1);
 	computer.os = determineOS(computer);
 	computer.busy = 0;
 	computer.stray = null;
@@ -849,9 +845,9 @@ function reverse(cable) {
 function cableSetup(cable) {
 	var comp1, comp2, cwidth, cheight;
 
-	cable.c1 = RAND(0, ncomputers - 1);
+	cable.c1 = rand(0, ncomputers - 1);
 	do {
-		cable.c2 = RAND(0, ncomputers - 1);
+		cable.c2 = rand(0, ncomputers - 1);
 	} while (cable.c2 === cable.c1);
 	cable.active = 0;
 	cable.index = 0;
@@ -1071,7 +1067,7 @@ function launch(max) {
 	if (max === 0 || off_screen === 0) {
 		return;
 	}
-	n = RAND(1, Math.min(max, off_screen));
+	n = rand(1, Math.min(max, off_screen));
 	for (n; n > 0; n--) {
 		bill = new Bill();
 		billEnter(bill);
@@ -1083,12 +1079,12 @@ function hordeSetup() {
 	var bill;
 	while (alive !== null) {
 		bill = alive;
-		alive = UNLINK(bill, alive);
+		alive = unlink(bill, alive);
 		bill = null;
 	}
 	while (strays !== null) {
 		bill = strays;
-		strays = UNLINK(bill, strays);
+		strays = unlink(bill, strays);
 		bill = null;
 	}
 	HORDE_COUNTER_OFF = hordeOn(level);
@@ -1132,7 +1128,7 @@ function hordeClickedStray(x, y) {
 		if (!billClickedstray(bill, x, y)) {
 			continue;
 		}
-		strays = UNLINK(bill, strays);
+		strays = unlink(bill, strays);
 		return bill;
 	}
 	return null;
@@ -1320,7 +1316,7 @@ function gameUpdate() {
 function main() {
 	var canvas;
 	canvas = document.getElementById("canvas");
-	ctx = canvas.getContext('2d');
+	ctx = canvas.getContext("2d");
 	ctx.font = "bold 12px sans-serif";
 	$("canvas").unbind();
 
