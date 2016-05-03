@@ -49,7 +49,7 @@ var FAST = 1;
 var WCELS = 4;                 /* # of bill walking animation frames */
 var DCELS = 5;                 /* # of bill dying animation frames */
 
-var billwidth, billheight;
+var billWidth, billHeight;
 
 var OS_OFFSET = 4;			/* offset of screen from 0,0 */
 var COMPUTER_TOASTER = 0;	/* computer 0 is a toaster */
@@ -71,8 +71,8 @@ var bucketheight = 24;
 
 var OS_WINGDOWS = 0;
 var OS_OFF = -1;
-var oswidth = 28;
-var osheight = 24;
+var osWidth = 28;
+var osHeight = 24;
 
 var osname = ["wingdows", "apple", "next", "sgi", "sun", "palm", "os2", "bsd", "linux", "redhat", "hurd", "beos"];
 var NUM_OS = osname.length;
@@ -286,14 +286,14 @@ function getBorderBill(bill) {
 	i = rand(0, 3);
 
 	if (i % 2 === 0) {
-		bill.x = rand(0, screensize - billwidth);
+		bill.x = rand(0, screensize - billWidth);
 	} else {
-		bill.y = rand(0, screensize - billheight);
+		bill.y = rand(0, screensize - billHeight);
 	}
 
 	switch (i) {
 	case 0:
-		bill.y = -billheight - 16;
+		bill.y = -billHeight - 16;
 		break;
 	case 1:
 		bill.x = screensize + 1;
@@ -302,7 +302,7 @@ function getBorderBill(bill) {
 		bill.y = screensize + 1;
 		break;
 	case 3:
-		bill.x = -billwidth - 2;
+		bill.x = -billWidth - 2;
 		break;
 	}
 }
@@ -313,14 +313,14 @@ function getBorderTarget(bill) {
 	i = rand(0, 3);
 
 	if (i % 2 === 0) {
-		bill.targetX = rand(0, screensize - billwidth);
+		bill.targetX = rand(0, screensize - billWidth);
 	} else {
-		bill.targetY = rand(0, screensize - billheight);
+		bill.targetY = rand(0, screensize - billHeight);
 	}
 
 	switch (i) {
 	case 0:
-		bill.targetY = -billheight - 16;
+		bill.targetY = -billHeight - 16;
 		break;
 	case 1:
 		bill.targetX = screensize + 1;
@@ -329,7 +329,7 @@ function getBorderTarget(bill) {
 		bill.targetY = screensize + 1;
 		break;
 	case 3:
-		bill.targetX = -billwidth - 2;
+		bill.targetX = -billWidth - 2;
 		break;
 	}
 }
@@ -531,10 +531,6 @@ function hordeRemoveBill(bill) {
 	networkClearStray(bill);
 }
 
-function os_height() {
-	return osheight;
-}
-
 /*  Update Bill standing at a computer */
 function updateAt(bill) {
 	var computer;
@@ -560,7 +556,7 @@ function updateAt(bill) {
 		computer.busy = 0;
 		return;
 	}
-	bill.yOffset = billheight - os_height();
+	bill.yOffset = billHeight - osHeight;
 	switch (bill.index) {
 	case 1:
 	case 2:
@@ -629,7 +625,7 @@ function updateAt(bill) {
 
 /* Updates Bill fleeing with his ill gotten gain */
 function updateOut(bill) {
-	if (uiIntersect(bill.x, bill.y, billwidth, billheight, 0, 0, screensize, screensize)) {
+	if (uiIntersect(bill.x, bill.y, billWidth, billHeight, 0, 0, screensize, screensize)) {
 		billMove(bill, FAST);
 		bill.index+=1;
 		bill.index %= WCELS;
@@ -699,24 +695,16 @@ function billSetDying(bill) {
 }
 
 function billClicked(bill, locx, locy) {
-	return (locx > bill.x && locx < bill.x + billwidth && locy > bill.y && locy < bill.y + billheight);
-}
-
-function osWidth() {
-	return oswidth;
+	return (locx > bill.x && locx < bill.x + billWidth && locy > bill.y && locy < bill.y + billHeight);
 }
 
 function billClickedstray(bill, locx, locy) {
-	return (locx > bill.x && locx < bill.x + osWidth() && locy > bill.y && locy < bill.y + os_height());
+	return (locx > bill.x && locx < bill.x + osWidth && locy > bill.y && locy < bill.y + osHeight);
 }
 
 function billLoadPix() {
-	billwidth = 24;
-	billheight = 38;
-}
-
-function bill_width() {
-	return billwidth;
+	billWidth = 24;
+	billHeight = 38;
 }
 
 /*
@@ -759,7 +747,7 @@ function computerSetup(computer, index) {
 		/* check for conflicting computer placement */
 		for (j = 0; j < index && flag; j+=1) {
 			c = computers[j];
-			twidth = compwidth - BILL_OFFSET_X + bill_width();
+			twidth = compwidth - BILL_OFFSET_X + billWidth;
 			if (uiIntersect(x, y, twidth, compheight, c.x, c.y, twidth, compheight)) {
 				flag = 0;
 			}
@@ -793,7 +781,7 @@ function computerDraw(computer) {
  * Spark
  */
 
-function SPARK_DELAY(level) {
+function spark_delay(level) {
 	return (Math.max(20 - (level), 0));
 }
 
@@ -851,7 +839,7 @@ function cableSetup(cable) {
 	} while (cable.c2 === cable.c1);
 	cable.active = 0;
 	cable.index = 0;
-	cable.delay = SPARK_DELAY(level);
+	cable.delay = spark_delay(level);
 
 	comp1 = computers[cable.c1];
 	comp2 = computers[cable.c2];
@@ -923,7 +911,7 @@ function cableUpdate(cable) {
 			// If WINGDOWS at both ends, do nothing
 		} else if (comp1.os === OS_WINGDOWS || comp2.os === OS_WINGDOWS) {
 			cable.active = 1;
-			cable.delay = SPARK_DELAY(level);
+			cable.delay = spark_delay(level);
 			if (comp2.os === OS_WINGDOWS) {
 				reverse(cable);
 			}
@@ -944,7 +932,7 @@ function cableOnspark(cable, locx, locy) {
 
 function cableReset(cable) {
 	cable.active = 0;
-	cable.delay = SPARK_DELAY(level);
+	cable.delay = spark_delay(level);
 }
 
 /*
