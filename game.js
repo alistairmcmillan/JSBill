@@ -457,21 +457,15 @@ function drawStray(bill) {
 }
 
 function billDraw(bill) {
-	switch (bill.state) {
-	case BILL_STATE_IN:
-	case BILL_STATE_OUT:
-	case BILL_STATE_DYING:
-		drawStd(bill);
-		break;
-	case BILL_STATE_AT:
-		drawAt(bill);
-		break;
-	case BILL_STATE_STRAY:
-		drawStray(bill);
-		break;
-	default:
-		break;
-	}
+    if (bill.state === BILL_STATE_IN ||
+        bill.state === BILL_STATE_OUT ||
+        bill.state === BILL_STATE_DYING) {
+        drawStd(bill);
+    } else if (bill.state === BILL_STATE_AT) {
+        drawAt(bill);
+    } else if (bill.state === BILL_STATE_STRAY) {
+        drawStray(bill);
+    }
 }
 
 /* Update Bill's position */
@@ -781,7 +775,7 @@ function computerDraw(computer) {
  * Spark
  */
 
-function spark_delay(level) {
+function sparkDelay(level) {
 	return (Math.max(20 - (level), 0));
 }
 
@@ -839,7 +833,7 @@ function cableSetup(cable) {
 	} while (cable.c2 === cable.c1);
 	cable.active = 0;
 	cable.index = 0;
-	cable.delay = spark_delay(level);
+	cable.delay = sparkDelay(level);
 
 	comp1 = computers[cable.c1];
 	comp2 = computers[cable.c2];
@@ -911,7 +905,7 @@ function cableUpdate(cable) {
 			// If WINGDOWS at both ends, do nothing
 		} else if (comp1.os === OS_WINGDOWS || comp2.os === OS_WINGDOWS) {
 			cable.active = 1;
-			cable.delay = spark_delay(level);
+			cable.delay = sparkDelay(level);
 			if (comp2.os === OS_WINGDOWS) {
 				reverse(cable);
 			}
@@ -932,7 +926,7 @@ function cableOnspark(cable, locx, locy) {
 
 function cableReset(cable) {
 	cable.active = 0;
-	cable.delay = spark_delay(level);
+	cable.delay = sparkDelay(level);
 }
 
 /*
