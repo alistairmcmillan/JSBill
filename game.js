@@ -1,4 +1,5 @@
 "use strict";
+/* global $ */
 
 var mousex = 0;
 var mousey = 0;
@@ -151,10 +152,10 @@ function uiDrawLine(x1, y1, x2, y2) {
 
 function uiSetPauseButton(action) {
 	if (action === 1) {
-		document.getElementById('pauseHref').disabled = false;
-		document.getElementById('pauseHref').textContent = 'Pause Game';
+		document.getElementById("pauseHref").disabled = false;
+		document.getElementById("pauseHref").textContent = "Pause Game";
 	} else {
-		document.getElementById('pauseHref').textContent = 'Resume Game';
+		document.getElementById("pauseHref").textContent = "Resume Game";
 	}
 }
 
@@ -171,15 +172,15 @@ function uiLoadPix() {
  * Story
  */
 function storyShow() {
-	if(document.getElementById('storydiv').style.display === "none") {
-		document.getElementById('storydiv').style.display = "block";
+	if(document.getElementById("storydiv").style.display === "none") {
+		document.getElementById("storydiv").style.display = "block";
 	} else {
-		document.getElementById('storydiv').style.display = "none";
+		document.getElementById("storydiv").style.display = "none";
 	}
 }
 
 function storyHide() {
-	document.getElementById('storydiv').style.display = "none";
+	document.getElementById("storydiv").style.display = "none";
 }
 
 /*
@@ -189,20 +190,20 @@ function storyHide() {
 var scores = new Array([]);
 
 function scorelistShow() {
-	if(document.getElementById('scorediv').style.display === "none") {
-		document.getElementById('scorediv').style.display = "block";
+	if(document.getElementById("scorediv").style.display === "none") {
+		document.getElementById("scorediv").style.display = "block";
 	} else {
-		document.getElementById('scorediv').style.display = "none";
+		document.getElementById("scorediv").style.display = "none";
 	}
 }
 
 function scorelistHide() {
-	document.getElementById('scorediv').style.display = "none";
+	document.getElementById("scorediv").style.display = "none";
 }
 
 function scorelistRead() {
     $.ajax({
-		url: 'get_scores.php', data: "", dataType: 'json',  success: function(rows)
+		url: 'get_scores.php', data: "", dataType: 'json',  success(rows)
 		{
 			$('table#scoretable tbody tr').remove();
 			for(var i = 0; i < rows.length; i++) {
@@ -214,8 +215,8 @@ function scorelistRead() {
 			}
 			scores.shift();
 			NUMSCORES = scores.length;
-			console.log(NUMSCORES);
-			console.log(scores);
+/*			console.log(NUMSCORES);
+			console.log(scores); */
 		}
 	});
 }
@@ -246,7 +247,7 @@ function scorelistRecalc(str, level, score) {
 	scores[i].level = level;
 	scores[i].score = Math.floor(score);
 	$.ajax({
-		url: 'save_score.php', data: { level: level, name: tname, score: Math.floor(score), date: Date.now() }, dataType: 'json',  success: function(rows)
+		url: 'save_score.php', data: { level: level, name: tname, score: Math.floor(score), date: Date.now() }, dataType: 'json',  success(rows)
 		{
 			// Update copy of scores since we've just added one
 			scorelistRead();
@@ -268,9 +269,9 @@ function Bill() {
 	this.x;
 	this.y;		/* location */
 	this.dx;	/* direction */
-	this.target_x;		/* target x position */
-	this.target_y;		/* target y position */
-	this.target_c;		/* target computer */
+	this.targetX;		/* target x position */
+	this.targetY;		/* target y position */
+	this.targetC;		/* target computer */
 	this.dx;	/* direction */
 	this.dx;	/* direction */
 	this.dx;	/* direction */
@@ -316,23 +317,23 @@ function getBorderTarget(bill) {
 	i = RAND(0, 3);
 
 	if (i % 2 === 0) {
-		bill.target_x = RAND(0, screensize - billwidth);
+		bill.targetX = RAND(0, screensize - billwidth);
 	} else {
-		bill.target_y = RAND(0, screensize - billheight);
+		bill.targetY = RAND(0, screensize - billheight);
 	}
 
 	switch (i) {
 	case 0:
-		bill.target_y = -billheight - 16;
+		bill.targetY = -billheight - 16;
 		break;
 	case 1:
-		bill.target_x = screensize + 1;
+		bill.targetX = screensize + 1;
 		break;
 	case 2:
-		bill.target_y = screensize + 1;
+		bill.targetY = screensize + 1;
 		break;
 	case 3:
-		bill.target_x = -billwidth - 2;
+		bill.targetX = -billwidth - 2;
 		break;
 	}
 }
@@ -379,10 +380,10 @@ function billEnter(bill) {
 	bill.cargo = OS_WINGDOWS;
 	bill.x_offset = -2;
 	bill.y_offset = -15;
-	bill.target_c = RAND(0, ncomputers - 1);
-	computer = computers[bill.target_c];
-	bill.target_x = computer.x + compwidth - BILL_OFFSET_X;
-	bill.target_y = computer.y + BILL_OFFSET_Y;
+	bill.targetC = RAND(0, ncomputers - 1);
+	computer = computers[bill.targetC];
+	bill.targetX = computer.x + compwidth - BILL_OFFSET_X;
+	bill.targetY = computer.y + BILL_OFFSET_Y;
 	HORDE_COUNTER_ON = hordeIncCounter(HORDE_COUNTER_ON, 1);
 	HORDE_COUNTER_OFF = hordeIncCounter(HORDE_COUNTER_OFF, -1);
 	bill.prev = null;
@@ -397,8 +398,8 @@ function stepSize(level) {
 function billMove(bill, mode) {
 	var xdist, ydist, step, dx, dy, signx, signy;
 
-	xdist = bill.target_x - bill.x;
-	ydist = bill.target_y - bill.y;
+	xdist = bill.targetX - bill.x;
+	ydist = bill.targetY - bill.y;
 	step = stepSize(level);
 	signx = xdist >= 0 ? 1 : -1;
 	signy = ydist >= 0 ? 1 : -1;
@@ -409,8 +410,8 @@ function billMove(bill, mode) {
 	if (!xdist && !ydist) {
 		return 0;
 	} else if (xdist < step && ydist < step) {
-		bill.x = bill.target_x;
-		bill.y = bill.target_y;
+		bill.x = bill.targetX;
+		bill.y = bill.targetY;
 	} else {
 		dx = (xdist * step * signx) / (xdist + ydist);
 		dy = (ydist * step * signy) / (xdist + ydist);
@@ -444,7 +445,7 @@ function drawStd(bill) {
 function drawAt(bill) {
 	var computer;
 
-	computer = computers[bill.target_c];
+	computer = computers[bill.targetC];
 	if (bill.index > 6 && bill.index < 12) {
 		osDraw(0, bill.x + bill.sx, bill.y + bill.sy);
 	}
@@ -482,7 +483,7 @@ function updateIn(bill) {
 	var moved, computer, i;
 
 	moved = billMove(bill, SLOW);
-	computer = computers[bill.target_c];
+	computer = computers[bill.targetC];
 	if (!moved && computer.os !== OS_WINGDOWS && !computer.busy) {
 		computer.busy = 1;
 		bill.index = 0;
@@ -491,11 +492,11 @@ function updateIn(bill) {
 	} else if (!moved) {
 		do {
 			i = RAND(0, ncomputers - 1);
-		} while (i === bill.target_c);
+		} while (i === bill.targetC);
 		computer = computers[i];
-		bill.target_c = i;
-		bill.target_x = computer.x + compwidth - BILL_OFFSET_X;
-		bill.target_y = computer.y + BILL_OFFSET_Y;
+		bill.targetC = i;
+		bill.targetX = computer.x + compwidth - BILL_OFFSET_X;
+		bill.targetY = computer.y + BILL_OFFSET_Y;
 	}
 	bill.index+=1;
 	bill.index %= WCELS;
@@ -541,7 +542,7 @@ function os_height() {
 /*  Update Bill standing at a computer */
 function updateAt(bill) {
 	var computer;
-	computer = computers[bill.target_c];
+	computer = computers[bill.targetC];
 	if (bill.index === 0 && computer.os === OS_OFF) {
 		bill.index = 6;
 		if (computer.stray === null) {
@@ -1146,7 +1147,7 @@ function hordeProcessClick(x, y) {
 			continue;
 		}
 		if (bill.state === BILL_STATE_AT) {
-			comp = computers[bill.target_c];
+			comp = computers[bill.targetC];
 			comp.busy = 0;
 			comp.stray = bill;
 		}
@@ -1318,48 +1319,48 @@ function gameUpdate() {
 
 function main() {
 	var canvas;
-	canvas = document.getElementById('canvas');
+	canvas = document.getElementById("canvas");
 	ctx = canvas.getContext('2d');
 	ctx.font = "bold 12px sans-serif";
 	$("canvas").unbind();
 
-	$("canvas").bind('gestureStart', function (event) {
+	$("canvas").bind("gestureStart", function (event) {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('gestureChange', function (event) {
+	$("canvas").bind("gestureChange", function (event) {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('gestureEnd', function (event) {
+	$("canvas").bind("gestureEnd", function (event) {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('touchmove', function (event) {
+	$("canvas").bind("touchmove", function (event) {
 		event.preventDefault();
 	});
 
-	$("canvas").bind('mousemove', function (event) {
+	$("canvas").bind("mousemove", function (event) {
 		mouseMoved(event.pageX, event.pageY, canvas);
 	});
 
-	$("canvas").bind('mousedown', function (event) {
+	$("canvas").bind("mousedown", function (event) {
 		event.preventDefault();
 		mouseButtonPress();
 	});
 
-	$("canvas").bind('mouseup', function (event) {
+	$("canvas").bind("mouseup", function (event) {
 		event.preventDefault();
 		mouseButtonRelease();
 	});
 
-	$("canvas").bind('touchstart', function (event) {
+	$("canvas").bind("touchstart", function (event) {
 		mouseMoved(event.targetTouches[0].pageX, event.targetTouches[0].pageY, canvas);
 		event.preventDefault();
 		mouseButtonPress();
 	});
 
-	$("canvas").bind('touchend', function (event) {
+	$("canvas").bind("touchend", function (event) {
 		mouseMoved(event.targetTouches[0].pageX, event.targetTouches[0].pageY, canvas);
 		event.preventDefault();
 		mouseButtonRelease();
