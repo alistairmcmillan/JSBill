@@ -272,8 +272,8 @@ function Bill() {
 	this.dx;	/* direction */
 	this.dx;	/* direction */
 	this.cargo;		/* which OS carried */
-	this.x_offset;		/* accounts for width differences */
-	this.y_offset;		/* 'bounce' factor for OS carried */
+	this.xOffset;		/* accounts for width differences */
+	this.yOffset;		/* 'bounce' factor for OS carried */
 	this.sx;
 	this.sy;		/* used for drawing extra OS during switch */
 	this.prev;
@@ -374,8 +374,8 @@ function billEnter(bill) {
 	getBorderBill(bill);
 	bill.index = 0;
 	bill.cargo = OS_WINGDOWS;
-	bill.x_offset = -2;
-	bill.y_offset = -15;
+	bill.xOffset = -2;
+	bill.yOffset = -15;
 	bill.targetC = rand(0, ncomputers - 1);
 	computer = computers[bill.targetC];
 	bill.targetX = computer.x + compwidth - BILL_OFFSET_X;
@@ -424,7 +424,7 @@ function billMove(bill, mode) {
 
 function drawStd(bill) {
 	if (bill.cargo >= 0) {
-		osDraw(bill.cargo, bill.x + bill.x_offset, bill.y + bill.y_offset);
+		osDraw(bill.cargo, bill.x + bill.xOffset, bill.y + bill.yOffset);
 	}
 	if (bill.state === BILL_STATE_DYING) {
 		// dcels
@@ -446,7 +446,7 @@ function drawAt(bill) {
 		osDraw(0, bill.x + bill.sx, bill.y + bill.sy);
 	}
 	if (bill.cargo >= 0) {
-		osDraw(bill.cargo, bill.x + bill.x_offset,	bill.y + bill.y_offset);
+		osDraw(bill.cargo, bill.x + bill.xOffset,	bill.y + bill.yOffset);
 	}
 	// acels
 	ctx.drawImage(sprites, bill.index * 58, 38, 58, 41, computer.x, computer.y, 58, 41);
@@ -496,7 +496,7 @@ function updateIn(bill) {
 	}
 	bill.index+=1;
 	bill.index %= WCELS;
-	bill.y_offset += (8 * (bill.index % 2) - 4);
+	bill.yOffset += (8 * (bill.index % 2) - 4);
 }
 
 function networkClearStray(bill) {
@@ -552,32 +552,32 @@ function updateAt(bill) {
 		bill.index+=1;
 	}
 	if (bill.index === 13) {
-		bill.y_offset = -15;
-		bill.x_offset = -2;
+		bill.yOffset = -15;
+		bill.xOffset = -2;
 		getBorderTarget(bill);
 		bill.index = 0;
 		bill.state = BILL_STATE_OUT;
 		computer.busy = 0;
 		return;
 	}
-	bill.y_offset = billheight - os_height();
+	bill.yOffset = billheight - os_height();
 	switch (bill.index) {
 	case 1:
 	case 2:
 		bill.x -= 8;
-		bill.x_offset += 8;
+		bill.xOffset += 8;
 		break;
 	case 3:
 		bill.x -= 10;
-		bill.x_offset += 10;
+		bill.xOffset += 10;
 		break;
 	case 4:
 		bill.x += 3;
-		bill.x_offset -= 3;
+		bill.xOffset -= 3;
 		break;
 	case 5:
 		bill.x += 2;
-		bill.x_offset -= 2;
+		bill.xOffset -= 2;
 		break;
 	case 6:
 		if (computer.os !== OS_OFF) {
@@ -586,15 +586,15 @@ function updateAt(bill) {
 			bill.cargo = computer.os;
 		} else {
 			bill.x -= 21;
-			bill.x_offset += 21;
+			bill.xOffset += 21;
 		}
 		computer.os = OS_OFF;
-		bill.y_offset = -15;
+		bill.yOffset = -15;
 		bill.x += 20;
-		bill.x_offset -= 20;
+		bill.xOffset -= 20;
 		break;
 	case 7:
-		bill.sy = bill.y_offset;
+		bill.sy = bill.yOffset;
 		bill.sx = -2;
 		break;
 	case 8:
@@ -605,13 +605,13 @@ function updateAt(bill) {
 		bill.sy = -7;
 		bill.sx = -7;
 		bill.x -= 8;
-		bill.x_offset += 8;
+		bill.xOffset += 8;
 		break;
 	case 10:
 		bill.sy = 0;
 		bill.sx = -7;
 		bill.x -= 15;
-		bill.x_offset += 15;
+		bill.xOffset += 15;
 		break;
 	case 11:
 		bill.sy = 0;
@@ -622,7 +622,7 @@ function updateAt(bill) {
 		break;
 	case 12:
 		bill.x += 11;
-		bill.x_offset -= 11;
+		bill.xOffset -= 11;
 		break;
 	}
 }
@@ -633,7 +633,7 @@ function updateOut(bill) {
 		billMove(bill, FAST);
 		bill.index+=1;
 		bill.index %= WCELS;
-		bill.y_offset += (8 * (bill.index % 2) - 4);
+		bill.yOffset += (8 * (bill.index % 2) - 4);
 	} else {
 		hordeRemoveBill(bill);
 		HORDE_COUNTER_ON = hordeIncCounter(HORDE_COUNTER_ON, -1);
@@ -641,7 +641,7 @@ function updateOut(bill) {
 	}
 }
 
-function PREPEND(bill, list) {
+function prepend(bill, list) {
 	bill.next = list;
 	if (list !== null) {
 		list.prev = bill;
@@ -652,16 +652,16 @@ function PREPEND(bill, list) {
 
 function hordeMoveBill(bill) {
 	alive = unlink(bill, alive);
-	strays = PREPEND(bill, strays);
+	strays = prepend(bill, strays);
 }
 
 /* Updates a Bill who is dying */
 function updateDying(bill) {
 	if (bill.index < DCELS - 1) {
-		bill.y_offset += (bill.index * GRAVITY);
+		bill.yOffset += (bill.index * GRAVITY);
 		bill.index+=1;
 	} else {
-		bill.y += bill.y_offset;
+		bill.y += bill.yOffset;
 		if (bill.cargo < 0 || bill.cargo === OS_WINGDOWS) {
 			hordeRemoveBill(bill);
 		} else {
@@ -693,8 +693,8 @@ function billUpdate(bill) {
 
 function billSetDying(bill) {
 	bill.index = -1;
-	bill.x_offset = -2;
-	bill.y_offset = -15;
+	bill.xOffset = -2;
+	bill.yOffset = -15;
 	bill.state = BILL_STATE_DYING;
 }
 
@@ -702,12 +702,12 @@ function billClicked(bill, locx, locy) {
 	return (locx > bill.x && locx < bill.x + billwidth && locy > bill.y && locy < bill.y + billheight);
 }
 
-function os_width() {
+function osWidth() {
 	return oswidth;
 }
 
 function billClickedstray(bill, locx, locy) {
-	return (locx > bill.x && locx < bill.x + os_width() && locy > bill.y && locy < bill.y + os_height());
+	return (locx > bill.x && locx < bill.x + osWidth() && locy > bill.y && locy < bill.y + os_height());
 }
 
 function billLoadPix() {
@@ -1061,17 +1061,17 @@ function between(lev) {
 
 /*  Launches Bills whenever called  */
 function launch(max) {
-	var bill, n, off_screen;
+	var bill, n, offScreen;
 
-	off_screen = HORDE_COUNTER_OFF;
-	if (max === 0 || off_screen === 0) {
+	offScreen = HORDE_COUNTER_OFF;
+	if (max === 0 || offScreen === 0) {
 		return;
 	}
-	n = rand(1, Math.min(max, off_screen));
+	n = rand(1, Math.min(max, offScreen));
 	for (n; n > 0; n--) {
 		bill = new Bill();
 		billEnter(bill);
-		alive = PREPEND(bill, alive);
+		alive = prepend(bill, alive);
 	}
 }
 
@@ -1115,9 +1115,9 @@ function hordeDraw() {
 
 function hordeAddBill(bill) {
 	if (bill.state === BILL_STATE_STRAY) {
-		strays = PREPEND(bill, strays);
+		strays = prepend(bill, strays);
 	} else {
-		alive = PREPEND(bill, alive);
+		alive = prepend(bill, alive);
 	}
 }
 
@@ -1188,15 +1188,15 @@ function gameStop() {
 }
 
 function updateInfo() {
-	var on_screen, off_screen, base, off, win, units, str;
+	var onScreen, offScreen, base, off, win, units, str;
 
-	on_screen = hordeGetCounter(HORDE_COUNTER_ON);
-	off_screen = hordeGetCounter(HORDE_COUNTER_OFF);
+	onScreen = hordeGetCounter(HORDE_COUNTER_ON);
+	offScreen = hordeGetCounter(HORDE_COUNTER_OFF);
 	base = networkGetCounter(NETWORK_COUNTER_BASE);
 	off = networkGetCounter(NETWORK_COUNTER_OFF);
 	win = networkGetCounter(NETWORK_COUNTER_WIN);
 	units = ncomputers;
-	str = "Bill:" + on_screen + "/" + off_screen + "  System:" + base + "/" + off + "/" + win + "  Level:" + level + "  Score:" + Math.floor(score);
+	str = "Bill:" + onScreen + "/" + offScreen + "  System:" + base + "/" + off + "/" + win + "  Level:" + level + "  Score:" + Math.floor(score);
 	ctx.fillText(str, 0, screensize-1);
 	efficiency += ((100 * base - 10 * win) / units);
 }
