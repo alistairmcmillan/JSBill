@@ -26,6 +26,8 @@ var paused = 0;
 var timer = 0;
 var sprites;
 var grabbedos;
+var audioMssound;
+var audioAhh = new Array(4);
 
 var NUMSCORES = 0;
 
@@ -162,6 +164,14 @@ function uiIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 function uiLoadPix() {
 	sprites = new Image();
 	sprites.src = "images/sprites.png";
+}
+
+function uiLoadAudio() {
+    audioMssound = new Howl({ src: ['wavs/mssound.wav'] });
+    audioAhh[0] = new Howl({ src: ['wavs/ahh0.wav'] });
+    audioAhh[1] = new Howl({ src: ['wavs/ahh1.wav'] });
+    audioAhh[2] = new Howl({ src: ['wavs/ahh2.wav'] });
+    audioAhh[3] = new Howl({ src: ['wavs/ahh3.wav'] });
 }
 
 /*
@@ -609,6 +619,7 @@ function updateAt(bill) {
 		computer.os = OS_WINGDOWS;
 		networkIncCounter(NETWORK_COUNTER_OFF, -1);
 		networkIncCounter(NETWORK_COUNTER_WIN, 1);
+		audioMssound.play();
 		break;
 	case 12:
 		bill.x += 11;
@@ -686,6 +697,8 @@ function billSetDying(bill) {
 	bill.xOffset = -2;
 	bill.yOffset = -15;
 	bill.state = BILL_STATE_DYING;
+	var randomInt = Math.round(Math.random() * 3);
+	audioAhh[randomInt].play();
 }
 
 function billClicked(bill, locx, locy) {
@@ -1350,6 +1363,7 @@ function main() {
 
 	uiLoadPix();
 	billLoadPix();
+	uiLoadAudio();
 
 	gamestate = STATE_WAITING;
 	if (level) {
