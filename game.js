@@ -205,6 +205,7 @@ function scorelistRead() {
       let t;
       let d;
       let timestamp;
+      console.log('There are ' + rows.length + ' rows.');
       for (i = 0; i < rows.length; i++) {
         t = rows[i].date.split(/[- :]/);
         d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
@@ -227,6 +228,7 @@ function scorelistRead() {
                                            '</td><td>' + rows[i].score +
                                            '</td><td>' + timestamp +
                                            '</td></tr>');
+        console.log('Added ' + rows[i].name + ' from ' + timestamp + '.');
       }
       scores.shift();
       numScores = scores.length;
