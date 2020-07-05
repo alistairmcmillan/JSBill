@@ -2,9 +2,11 @@
 <html>
 <head>
 <title>XBill</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <style>
 body {
-	background: lightblue;
+	background: #3B6EA5;
+    color: white;
 	font-family: sans-serif;
 	text-align: center;
 	border: 0;
@@ -13,6 +15,10 @@ body {
 	font-family: Tahoma, sans-serif;
 	font-size: 12px;
 	line-height: 12px;
+}
+
+body a {
+    color: white;
 }
 
 div {
@@ -65,9 +71,9 @@ div#menubar ul li:hover a {
 div#menubar ul li a {
 	display: block;
 	padding: 5px 10px;
-	color: #000;
+	color: black;
 	text-align: left;
-	text-decoration: none;
+    text-decoration: none;
 }
 
 div#menubar ul ul {
@@ -98,6 +104,7 @@ div#scorediv, div#newscorediv, div#storydiv {
 	top:25%;
 	left:50%;
 	background-color:#d4d0c8;
+    color: black;
 	z-index:1002;
 	overflow:auto;
 	width:40em;
@@ -177,10 +184,9 @@ at his task.<br /><br />
 				<li><a href="JavaScript:gameStart(1);">New&nbsp;Game</a></li>
 				<li><a href="JavaScript:gameStop();" id="pauseHref">Pause&nbsp;Game</a></li>
 				<li><a href="JavaScript:scorelistShow();">View&nbsp;High&nbsp;Scores</a></li>
-				<li><a href="JavaScript:gameWarpToLevel();">Warp&nbsp;to&nbsp;Level...</a></li>
 			</ul>
 		</li>
-		<li><a href="JavaScript:menuShow()"><u>I</u>nfo</a>
+		<li><a href="JavaScript:menu_show()"><u>I</u>nfo</a>
 			<ul id="infomenu">
 				<li><a href="JavaScript:storyShow();">Story&nbsp;of&nbsp;XBill</a></li>
 			</ul>
@@ -188,20 +194,21 @@ at his task.<br /><br />
 	</ul>
 </div>
 
-<div style="width:600px;margin-left:auto;margin-right:auto;">
+<div style="width:400px;margin-left:auto;margin-right:auto;">
 <canvas id="canvas" style="margin-top:0px;background-color: white;" width="400" height="400">It appears that your browser doesn't support the canvas element.</canvas><br />
 <a href="http://xbill.org/">XBill</a> was created by Brian Wellington & Matias Duarte.<br />
-Ported to the web by <a href="http://www.facebook.com/alistairmcmillan">Alistair McMillan</a>.
+Ported to the web by <a href="https://twitter.com/alistair1975">Alistair McMillan</a>.
 </div>
 
 <div id='scorediv' style='display:none;'>
 <h1>High Scores</h1>
 <button id='hide' onClick='JavaScript:scorelistHide();'>Close</button>
 <table id='scoretable'>
-<tbody></tbody>
+<tbody><tr><th></th><th>Level</th><th>Score</th><th>Date</th></tr></tbody>
 </table>
 </div>
 
+<script type="text/javascript" src="howler.js"></script>
 <script type="text/javascript" src="game.js"></script>
 
 <script>
