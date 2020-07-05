@@ -199,6 +199,7 @@ function scorelistHide() {
 function scorelistRead() {
   $.ajax({
     url: 'get_scores.php', data: '', dataType: 'json', success: function(rows) {
+      console.log('get_scores.php returned successfully');
       $('table#scoretable tbody tr').remove();
       let i;
       let t;
@@ -269,6 +270,7 @@ function scorelistRecalc(str, level, score) {
     dataType: 'json',
     success: function(rows) {
       // Update copy of scores since we've just added one
+      console.log('Calling scorelistRead()...');
       scorelistRead();
     }
   });
