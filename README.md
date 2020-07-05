@@ -57,7 +57,6 @@ Options:
 
 
 Authors:
-	Main Programmer:
-		Brian Wellington <bwelling@xbill.org>
-	Programming & graphics (v2.0 and earlier):
-		Matias Duarte <matias@hyperimage.com>
+- Main Programmer: Brian Wellington <bwelling@xbill.org>
+- Programming & graphics (v2.0 and earlier): Matias Duarte <matias@hyperimage.com>
+- JavaScript port: Alistair McMillan <alistairmcmillan75@gmail.com>
