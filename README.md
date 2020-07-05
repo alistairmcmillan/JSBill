@@ -1,4 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e69b82c1ef434959b89041e3a70d4511)](https://www.codacy.com/app/alistairmcmillan75/JSBill?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alistairmcmillan/JSBill&amp;utm_campaign=Badge_Grade)
+[![codebeat badge](https://codebeat.co/badges/c38da866-55e5-466a-a36a-4a09b01823f1)](https://codebeat.co/projects/github-com-alistairmcmillan-jsbill-master)
 
 JSBill
 ======
