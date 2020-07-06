@@ -141,21 +141,6 @@ div#storydiv div {
 }
 
 </style>
-<script type="text/javascript" src="jquery.js"></script>
-<script>
-function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
-        $('<img/>')[0].src = this;
-    });
-}
-
-preload([
-//	'images/hand_down.png',
-//	'images/hand_up.png',
-	'images/sprites.png'
-]);
-
-</script>
 </head>
 <body>
 
@@ -209,23 +194,31 @@ Ported to the web by <a href="https://twitter.com/alistair1975">Alistair McMilla
 </table>
 </div>
 
+<script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="howler.js"></script>
 <script type="text/javascript" src="game.js"></script>
-
 <script>
+	function preload(arrayOfImages) {
+		$(arrayOfImages).each(function(){
+			$('<img/>')[0].src = this;
+		});
+	}
+
+	preload([
+		'images/sprites.png'
+	]);
+
 	window.onload = function () {
 		main();
 	}
 </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOURGOOGLETAGHERE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-<script type="text/javascript"> 
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script> 
-<script type="text/javascript"> 
-var pageTracker = _gat._getTracker("UA-1895914-1");
-pageTracker._initData();
-pageTracker._trackPageview();
+  gtag('config', 'YOURGOOGLETAGHERE');
 </script>
 </body>
 </html>
