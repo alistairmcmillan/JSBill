@@ -185,6 +185,7 @@ function storyHide() {
 const scores = new Array([]);
 
 function scorelistShow() {
+  scorelistRead();
   if (document.getElementById('scorediv').style.display === 'none') {
     document.getElementById('scorediv').style.display = 'block';
   } else {
@@ -199,13 +200,11 @@ function scorelistHide() {
 function scorelistRead() {
   $.ajax({
     url: 'get_scores.php', data: '', dataType: 'json', success: function(rows) {
-      console.log('get_scores.php returned successfully');
       $('table#scoretable tbody tr').remove();
       let i;
       let t;
       let d;
       let timestamp;
-      console.log('There are ' + rows.length + ' rows.');
       for (i = 0; i < rows.length; i++) {
         t = rows[i].date.split(/[- :]/);
         d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
@@ -228,7 +227,6 @@ function scorelistRead() {
                                            '</td><td>' + rows[i].score +
                                            '</td><td>' + timestamp +
                                            '</td></tr>');
-        console.log('Added ' + rows[i].name + ' from ' + timestamp + '.');
       }
       scores.shift();
       numScores = scores.length;
@@ -271,9 +269,7 @@ function scorelistRecalc(str, level, score) {
           },
     dataType: 'json',
     success: function(rows) {
-      // Update copy of scores since we've just added one
-      console.log('Calling scorelistRead()...');
-      scorelistRead();
+      console.log('Saved new score.');
     }
   });
 }
@@ -1227,10 +1223,6 @@ function updateInfo() {
   efficiency += ((100 * BASE - 10 * WIN) / UNITS);
 }
 
-function gameAddHighScore(str) {
-  scorelistRecalc(str, level, score);
-}
-
 function mouseMoved(x, y, canvas) {
   mousex = x - canvas.offsetLeft;
   mousey = y - canvas.offsetTop;
@@ -1319,7 +1311,7 @@ function gameUpdate() {
       if (name === null) {
         name = 'Anonymous';
       }
-      gameAddHighScore(name);
+      scorelistRecalc(name, level, score);
     }
     uiKillTimer();
     uiSetPausebutton(0);
