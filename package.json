@@ -1,0 +1,22 @@
+{
+  "name": "jsbill",
+  "version": "1.0.0",
+  "description": "[![codebeat badge](https://codebeat.co/badges/c38da866-55e5-466a-a36a-4a09b01823f1)](https://codebeat.co/projects/github-com-alistairmcmillan-jsbill-master)",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alistairmcmillan/JSBill.git"
+  },
+  "author": "Alistair McMillan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alistairmcmillan/JSBill/issues"
+  },
+  "homepage": "https://github.com/alistairmcmillan/JSBill#readme",
+  "dependencies": {
+    "jquery": "^3.6.4"
+  }
+}
